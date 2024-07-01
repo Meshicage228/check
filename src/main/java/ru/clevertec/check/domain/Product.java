@@ -1,0 +1,16 @@
+package ru.clevertec.check.domain;
+
+import lombok.*;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
+@Setter
+@Builder
+public class Product {
+    private String description;
+    private Float price;
+    private Integer quantity;
+    private Boolean isWholeSale;
+}
