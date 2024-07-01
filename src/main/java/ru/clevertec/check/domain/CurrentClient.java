@@ -2,14 +2,14 @@ package ru.clevertec.check.domain;
 
 import lombok.*;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 @Getter
 @Setter
 @ToString
 @Builder
 public class CurrentClient {
-    public HashMap<Integer, Product> basket;
+    public ArrayList<Product> basket;
     public DiscountCard discountDebitCard;
     public Float balanceDebitCard;
 }

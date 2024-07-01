@@ -12,5 +12,6 @@ public class Product {
     private String description;
     private Float price;
     private Integer quantity;
+    private Integer purchaseQuantity;
     private Boolean isWholeSale;
 }

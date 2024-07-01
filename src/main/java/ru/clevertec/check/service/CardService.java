@@ -1,7 +1,7 @@
 package ru.clevertec.check.service;
 
-import ru.clevertec.check.domain.DiscountCard;
 import ru.clevertec.check.db.CustomDB;
+import ru.clevertec.check.domain.DiscountCard;
 
 public class CardService {
     public DiscountCard formCard(String cardNumber) {
