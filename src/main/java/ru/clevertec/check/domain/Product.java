@@ -13,5 +13,7 @@ public class Product {
     private Float price;
     private Integer quantity;
     private Integer purchaseQuantity;
+    private Float individualDiscount;
+    private Float fullCost;
     private Boolean isWholeSale;
 }

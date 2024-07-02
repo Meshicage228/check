@@ -2,8 +2,7 @@ package ru.clevertec.check.service;
 
 import ru.clevertec.check.domain.InputStringDetails;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class StringInputService {
 
@@ -11,20 +10,24 @@ public class StringInputService {
         String combinedString = String.join(" ", args);
 
         return combinedString.matches(".*(\\d+-\\d+).*") &&
-                combinedString.matches(".*discountCard=\\d{4}.*") &&
                 combinedString.contains("balanceDebitCard=");
     }
 
     public InputStringDetails formStringDetails(String[] args){
-        List<Integer> extractedNumbers = new ArrayList<>();
+        HashMap<Integer, Integer> pairs = new HashMap<>();
         String cardNumber = "";
         Float cardBalance = 0f;
 
         for (var item : args) {
             if (item.contains("-")) {
                 String[] parts = item.split("-");
-                for (String part : parts) {
-                    extractedNumbers.add(Integer.parseInt(part));
+                int key = Integer.parseInt(parts[0]);
+                int value = Integer.parseInt(parts[1]);
+
+                if(pairs.containsKey(key)){
+                    pairs.put(key, pairs.get(key) + value);
+                } else {
+                    pairs.put(key, value);
                 }
             }
             else if (item.startsWith("discountCard=")) {
@@ -34,11 +37,10 @@ public class StringInputService {
             }
         }
 
-        InputStringDetails build = InputStringDetails.builder()
+        return InputStringDetails.builder()
                 .cardNumber(cardNumber)
-                .extractedPairs(extractedNumbers)
+                .extractedPairs(pairs)
                 .cardBalance(cardBalance)
                 .build();
-        return build;
     }
 }

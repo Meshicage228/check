@@ -5,18 +5,21 @@ import ru.clevertec.check.db.CustomDB;
 import ru.clevertec.check.domain.Product;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 @AllArgsConstructor
 public class ProductService {
-    public ArrayList<Product> formCart(List<Integer> pairs) {
+    public ArrayList<Product> formCart(HashMap<Integer, Integer> pairs) {
         ArrayList<Product> totalProducts = new ArrayList<>();
-        for (int i = 0; i < pairs.size(); i+=2) {
-            Integer keyValue = pairs.get(i);
-            Integer productCount = pairs.get(i+1);
+        for (var pair : pairs.entrySet()) {
+            Integer keyValue = pair.getKey();
+            Integer productCount = pair.getValue();
 
-            if (CustomDB.products.containsKey(pairs.get(i))){
+            if (CustomDB.products.containsKey(keyValue)){
                 Product product = CustomDB.products.get(keyValue);
+                if (product.getQuantity() < productCount){
+                    throw new RuntimeException("NOT ENOUGH AT STOCK");
+                }
                 product.setPurchaseQuantity(productCount);
                 totalProducts.add(product);
             } else {

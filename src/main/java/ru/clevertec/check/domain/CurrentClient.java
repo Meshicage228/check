@@ -9,7 +9,7 @@ import java.util.ArrayList;
 @ToString
 @Builder
 public class CurrentClient {
-    public ArrayList<Product> basket;
-    public DiscountCard discountDebitCard;
-    public Float balanceDebitCard;
+    private ArrayList<Product> basket;
+    private DiscountCard discountDebitCard;
+    private Float balanceDebitCard;
 }
