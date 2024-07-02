@@ -5,6 +5,9 @@ import ru.clevertec.check.domain.DiscountCard;
 import ru.clevertec.check.domain.Product;
 
 import java.io.FileWriter;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -49,7 +52,10 @@ public class BillService {
         DiscountCard discountDebitCard = currentClient.getDiscountDebitCard();
         StringBuilder stringBuilder = new StringBuilder();
         Collections.sort(currentClient.getBasket(), Comparator.comparing(Product::getDescription));
-        stringBuilder.append("Date;").append("Time \n").append("Some Date;").append("some Time \n \n");
+
+        stringBuilder.append("Date;").append("Time \n");
+        stringBuilder.append(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))).append(";").append(LocalTime.now().format(DateTimeFormatter.ofPattern("HH.mm.ss"))).append("\n");
+
         stringBuilder.append("QTY;").append("DESCRIPTION;").append("PRICE;").append("DISCOUNT;").append("TOTAL \n");
 
         for (var product : currentClient.getBasket()) {
