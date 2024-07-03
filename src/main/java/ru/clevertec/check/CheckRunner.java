@@ -1,7 +1,10 @@
 package ru.clevertec.check;
 
+import ru.clevertec.check.factory.ServiceFactory;
+
 public class CheckRunner {
     public static void main(String[] args) {
-        System.out.println("hello!");
+        BillApplication billApplication = ServiceFactory.createBillApplication();
+        billApplication.start(args);
     }
 }
