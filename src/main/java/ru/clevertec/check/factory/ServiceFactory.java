@@ -28,12 +28,12 @@ public class ServiceFactory {
         return new ClientServiceImpl(productService, cardService);
     }
 
-    public static FileService createFileService() {
-        return new FileServiceImpl();
+    public static FilePrintService createFileService() {
+        return new FilePrintServiceImpl();
     }
 
     public static BillService createBillService() {
-        FileService fileService = createFileService();
+        FilePrintService fileService = createFileService();
         return new BillServiceImpl(fileService);
     }
 

@@ -6,7 +6,7 @@ import ru.clevertec.check.domain.DiscountCard;
 import ru.clevertec.check.domain.Product;
 import ru.clevertec.check.exceptions.NotEnoughMoneyException;
 import ru.clevertec.check.service.BillService;
-import ru.clevertec.check.service.FileService;
+import ru.clevertec.check.service.FilePrintService;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ import static java.util.Objects.nonNull;
 
 @AllArgsConstructor
 public class BillServiceImpl implements BillService {
-    private FileService fileService;
+    private FilePrintService fileService;
 
     public void formTotalBill(CurrentClient currentClient) throws NotEnoughMoneyException {
         ArrayList<Product> basket = currentClient.getBasket();
@@ -31,8 +31,6 @@ public class BillServiceImpl implements BillService {
             product.setIndividualDiscount(discountMoneyAmount);
             product.setFullCost(productTotal);
 
-            printProductDetails(product, productTotal, discountMoneyAmount);
-
             totalWithNoDiscount += productTotal;
             totalDiscount += discountMoneyAmount;
         }
@@ -43,23 +41,10 @@ public class BillServiceImpl implements BillService {
             throw new NotEnoughMoneyException();
         }
 
-        System.out.println("Total price : " + roundNumber(totalWithNoDiscount));
-        System.out.println("Total discount : " + roundNumber(totalDiscount));
-        System.out.println("Total with discount : " + roundNumber(totalWithDiscount));
-        System.out.println("SUCCESS!");
-
-        fileService.createBillFile(currentClient, totalWithNoDiscount, totalDiscount, totalWithDiscount);
+        fileService.createBillFile(currentClient, roundNumber(totalWithNoDiscount), roundNumber(totalDiscount), roundNumber(totalWithDiscount));
     }
 
     private Float roundNumber(Float number) {
         return (Math.round(number * 100.0f) / 100.0f);
-    }
-
-    private void printProductDetails(Product product, Float productTotal, Float discountMoneyAmount) {
-        System.out.println("Quantity : " + product.getPurchaseQuantity());
-        System.out.println("Description : " + product.getDescription());
-        System.out.println("Price : " + product.getPrice());
-        System.out.println("Total : " + productTotal);
-        System.out.println("Discount : " + discountMoneyAmount);
     }
 }

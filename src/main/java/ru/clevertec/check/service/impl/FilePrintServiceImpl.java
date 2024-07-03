@@ -3,7 +3,7 @@ package ru.clevertec.check.service.impl;
 import ru.clevertec.check.domain.CurrentClient;
 import ru.clevertec.check.domain.DiscountCard;
 import ru.clevertec.check.domain.Product;
-import ru.clevertec.check.service.FileService;
+import ru.clevertec.check.service.FilePrintService;
 
 import java.io.FileWriter;
 import java.time.LocalDate;
@@ -11,11 +11,14 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 import static java.util.Objects.nonNull;
 
-public class FileServiceImpl implements FileService {
+public class FilePrintServiceImpl implements FilePrintService {
+
+    @Override
     public void createBillFile(CurrentClient currentClient, Float... arr) {
         DiscountCard discountDebitCard = currentClient.getDiscountDebitCard();
         StringBuilder stringBuilder = new StringBuilder();
@@ -41,11 +44,30 @@ public class FileServiceImpl implements FileService {
         stringBuilder.append(convertNumber(arr[0])).append(";")
                 .append(convertNumber(arr[1])).append(";")
                 .append(convertNumber(arr[2])).append("\n");
+
         try (FileWriter fileWriter = new FileWriter("src/result.csv")) {
             fileWriter.write(stringBuilder.toString());
+            printBillConsole(currentClient.getBasket(), arr);
         } catch (Exception ex) {
             System.out.println("Exception while creating result.csv file" + ex.getMessage());
         }
+    }
+
+    @Override
+    public void printBillConsole(List<Product> productList, Float... arr) {
+        System.out.println("********** TOTAL BILL **********");
+        for (var product : productList) {
+            System.out.printf("* %-20s *\n", "Description: " + product.getDescription());
+            System.out.printf("* %-20s *\n", "Price: " + product.getPrice() + " $");
+            System.out.printf("* %-20s *\n", "Quantity: " + product.getPurchaseQuantity());
+            System.out.printf("* %-20s *\n", "Total discount: " + product.getIndividualDiscount() + " $");
+            System.out.printf("* %-20s *\n", "Total cost: " + product.getFullCost() + " $");
+            System.out.println("*********************************");
+        }
+        System.out.println("Total price : " + convertNumber(arr[0]));
+        System.out.println("Total discount : " + convertNumber(arr[1]));
+        System.out.println("Total with discount : " + convertNumber(arr[2]));
+        System.out.println("*********************************");
     }
 
     private String convertNumber(Float number) {
