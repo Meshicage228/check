@@ -14,6 +14,7 @@ public class ClientServiceImpl implements ClientService {
     public ProductService productService;
     public CardService cardService;
 
+    @Override
     public CurrentClient formClient(InputStringDetails inputStringDetails) {
         return CurrentClient.builder()
                 .basket(productService.formCart(inputStringDetails.getExtractedPairs()))

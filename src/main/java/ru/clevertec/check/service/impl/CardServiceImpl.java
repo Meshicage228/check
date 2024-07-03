@@ -5,6 +5,8 @@ import ru.clevertec.check.domain.DiscountCard;
 import ru.clevertec.check.service.CardService;
 
 public class CardServiceImpl implements CardService {
+
+    @Override
     public DiscountCard formCard(String cardNumber) {
         if(cardNumber.isBlank()){
             return null;
