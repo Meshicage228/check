@@ -16,7 +16,6 @@ ext{
             lombok            : '1.18.34'
     ]
 }
-
 dependencies {
     implementation "org.apache.commons:commons-collections4:${versions.commonsCollections}"
     implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
