@@ -13,15 +13,12 @@ ext{
     versions = [
             commonsCollections: '4.4',
             commonsLang       : '3.13.0',
-            lombok            : '1.18.34',
-            openCSV           : '3.7'
+            lombok            : '1.18.34'
     ]
 }
-
 dependencies {
     implementation "org.apache.commons:commons-collections4:${versions.commonsCollections}"
     implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
-    implementation "com.opencsv:opencsv:${versions.openCSV}"
     compileOnly "org.projectlombok:lombok:${versions.lombok}"
     annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
 
