@@ -1,10 +1,10 @@
-package ru.clevertec.check.service;
+package ru.clevertec.check.utils;
 
 import ru.clevertec.check.domain.InputStringDetails;
 
 import java.util.HashMap;
 
-public class StringInputService {
+public class StringInputUtil {
 
     public boolean isValid(String[] args) {
         String combinedString = String.join(" ", args);
