@@ -8,6 +8,10 @@ public class BadRequestException extends AbstractErrorFileWriter{
         createErrorFile(getErrorMessage());
     }
 
+    public BadRequestException(String errorFilePath) {
+        createErrorFile(getErrorMessage(), errorFilePath);
+    }
+
     @Override
     public String getErrorMessage() {
         return ExceptionMessages.BAD_REQUEST;
