@@ -9,7 +9,7 @@
     gradle build
     ```
 
-2. Запустите приложение (один из вариантов):
+2. Запустите приложение (к примеру):
     ```
     java -cp build/classes/java/main ru.clevertec.check.CheckRunner 1-5 4-30 9-1 13-2 13-3 1-1 discountCard=1111 balanceDebitCard=100
     ```

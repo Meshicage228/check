@@ -25,7 +25,7 @@ public class FilePrintServiceImpl implements FilePrintService {
         Collections.sort(currentClient.getBasket(), Comparator.comparing(Product::getDescription));
 
         stringBuilder.append("Date;").append("Time \n");
-        stringBuilder.append(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))).append(";").append(LocalTime.now().format(DateTimeFormatter.ofPattern("HH.mm.ss"))).append("\n");
+        stringBuilder.append(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))).append(";").append(LocalTime.now().format(DateTimeFormatter.ofPattern("HH.mm.ss"))).append("\n \n");
 
         stringBuilder.append("QTY;").append("DESCRIPTION;").append("PRICE;").append("DISCOUNT;").append("TOTAL \n");
 
@@ -45,7 +45,7 @@ public class FilePrintServiceImpl implements FilePrintService {
                 .append(convertNumber(arr[1])).append(";")
                 .append(convertNumber(arr[2])).append("\n");
 
-        try (FileWriter fileWriter = new FileWriter("src/result.csv")) {
+        try (FileWriter fileWriter = new FileWriter("result.csv")) {
             fileWriter.write(stringBuilder.toString());
             printBillConsole(currentClient.getBasket(), arr);
         } catch (Exception ex) {
