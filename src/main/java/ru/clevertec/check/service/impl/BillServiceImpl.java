@@ -6,6 +6,7 @@ import ru.clevertec.check.domain.DiscountCard;
 import ru.clevertec.check.domain.Product;
 import ru.clevertec.check.exceptions.NotEnoughMoneyException;
 import ru.clevertec.check.service.BillService;
+import ru.clevertec.check.service.FileService;
 
 import java.util.*;
 
@@ -13,7 +14,7 @@ import static java.util.Objects.nonNull;
 
 @AllArgsConstructor
 public class BillServiceImpl implements BillService {
-    private FileServiceImpl fileService;
+    private FileService fileService;
 
     public void formTotalBill(CurrentClient currentClient) throws NotEnoughMoneyException {
         ArrayList<Product> basket = currentClient.getBasket();
