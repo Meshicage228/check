@@ -19,7 +19,7 @@ public class StringInputUtil {
         Float cardBalance = 0f;
 
         for (var item : args) {
-            if (item.contains("-")) {
+            if (item.contains("-") && !item.contains("=-")) {
                 String[] parts = item.split("-");
                 int key = Integer.parseInt(parts[0]);
                 int value = Integer.parseInt(parts[1]);
