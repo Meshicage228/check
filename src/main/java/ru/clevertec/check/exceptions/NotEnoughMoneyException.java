@@ -1,10 +1,20 @@
 package ru.clevertec.check.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import ru.clevertec.check.utils.ExceptionMessages;
 
-@AllArgsConstructor
-@Getter
-public class NotEnoughMoneyException extends Exception {
-    private String errorMessage;
+public class NotEnoughMoneyException extends AbstractErrorFileWriter {
+
+    public NotEnoughMoneyException() {
+        createErrorFile(getErrorMessage());
+    }
+
+    @Override
+    public String getErrorMessage() {
+        return ExceptionMessages.NOT_ENOUGH_MONEY;
+    }
+
+    @Override
+    public void createErrorFile(String errorMessage) {
+        super.createErrorFile(errorMessage);
+    }
 }

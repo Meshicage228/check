@@ -1,10 +1,20 @@
 package ru.clevertec.check.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import ru.clevertec.check.utils.ExceptionMessages;
 
-@AllArgsConstructor
-@Getter
-public class InternalServerError extends Exception{
-    private String errorMessage;
+public class InternalServerError extends AbstractErrorFileWriter {
+
+    public InternalServerError() {
+        createErrorFile(getErrorMessage());
+    }
+
+    @Override
+    public String getErrorMessage() {
+        return ExceptionMessages.INTERNAL_SERVER_ERROR;
+    }
+
+    @Override
+    public void createErrorFile(String errorMessage) {
+        super.createErrorFile(errorMessage);
+    }
 }

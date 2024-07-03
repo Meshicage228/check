@@ -1,9 +1,8 @@
-package ru.clevertec.check.utils;
+package ru.clevertec.check.service;
 
 import ru.clevertec.check.domain.CurrentClient;
 import ru.clevertec.check.domain.DiscountCard;
 import ru.clevertec.check.domain.Product;
-
 import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
-import java.util.StringJoiner;
 
 import static java.util.Objects.nonNull;
 
@@ -44,17 +42,7 @@ public class FileService {
         try (FileWriter fileWriter = new FileWriter("src/result.csv")) {
             fileWriter.write(stringBuilder.toString());
         } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void createErrorFile(String errorMessage){
-        try (FileWriter fileWriter = new FileWriter("src/result.csv")) {
-            StringJoiner stringJoiner = new StringJoiner("\n");
-            stringJoiner.add("ERROR").add(errorMessage);
-            fileWriter.write(stringJoiner.toString());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Exception while creating result.csv file" + ex.getMessage());
         }
     }
 
