@@ -10,7 +10,7 @@
     ```
 
 2. Запустите приложение (к примеру):
-    При корректной работе приложения, необходимо вставить в корень проекта ваш `products.csv` и указать путь в CLI, например : `pathToFile=./products.csv`
+    Для корректной работе приложения, необходимо вставить в корень проекта ваш `products.csv` и указать путь в CLI, например : `pathToFile=./products.csv`
     ```
     java -cp build/classes/java/main ru.clevertec.check.CheckRunner 1-1 discountCard=1111 balanceDebitCard=100 pathToFile=./products.csv
     ```
