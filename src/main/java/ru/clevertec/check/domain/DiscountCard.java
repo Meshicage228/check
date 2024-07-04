@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @Builder
 public class DiscountCard {
-    private String number;
+    private Integer id;
+    private Integer number;
     private Integer discountAmount;
 }

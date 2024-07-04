@@ -1,16 +1,19 @@
 package ru.clevertec.check.service.impl;
 
 import lombok.AllArgsConstructor;
-import ru.clevertec.check.db.CustomDB;
 import ru.clevertec.check.domain.Product;
 import ru.clevertec.check.exceptions.InternalServerError;
+import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static java.util.Objects.nonNull;
+
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
+    private ProductRepository productRepository;
 
     @Override
     public ArrayList<Product> formCart(HashMap<Integer, Integer> pairs) {
@@ -19,9 +22,10 @@ public class ProductServiceImpl implements ProductService {
             Integer keyValue = pair.getKey();
             Integer productCount = pair.getValue();
 
-            if (CustomDB.products.containsKey(keyValue)){
-                Product product = CustomDB.products.get(keyValue);
-                if (product.getQuantity() < productCount){
+            Product product = productRepository.getById(keyValue);
+
+            if (nonNull(product)) {
+                if (product.getQuantity() < productCount) {
                     throw new InternalServerError();
                 }
                 product.setPurchaseQuantity(productCount);
@@ -30,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
                 throw new InternalServerError();
             }
         }
-        
+
         return totalProducts;
     }
 }

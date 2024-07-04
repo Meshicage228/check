@@ -1,22 +1,27 @@
 package ru.clevertec.check.service.impl;
 
-import ru.clevertec.check.db.CustomDB;
+import lombok.AllArgsConstructor;
 import ru.clevertec.check.domain.DiscountCard;
+import ru.clevertec.check.repository.CardRepository;
 import ru.clevertec.check.service.CardService;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
+@AllArgsConstructor
 public class CardServiceImpl implements CardService {
+    private CardRepository cardRepository;
 
     @Override
     public DiscountCard formCard(String cardNumber) {
-        if(cardNumber.isBlank()){
+        if(isNull(cardNumber)){
             return null;
         }
-        return CustomDB.discountCards.containsKey(cardNumber) ?
-                DiscountCard.builder()
-                        .discountAmount(CustomDB.discountCards.get(cardNumber))
-                        .number(cardNumber).build() :
+        DiscountCard byCardNumber = cardRepository.getByCardNumber(Integer.parseInt(cardNumber));
+
+        return nonNull(byCardNumber) ? byCardNumber :
                 DiscountCard.builder()
                         .discountAmount(2)
-                        .number(cardNumber).build();
+                        .number(Integer.parseInt(cardNumber)).build();
     }
 }
