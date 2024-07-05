@@ -2,6 +2,7 @@ package ru.clevertec.check.utils;
 
 import ru.clevertec.check.domain.InputStringDetails;
 import ru.clevertec.check.exceptions.BadRequestException;
+import ru.clevertec.check.service.impl.FilePrintServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,8 @@ public class StringInputUtil {
                 }
             }
         });
+
+        FilePrintServiceImpl.TOTAL_BILL_PATH = values.get("saveToFile");
 
         return InputStringDetails.builder()
                 .cardNumber(values.get("discountCard"))
