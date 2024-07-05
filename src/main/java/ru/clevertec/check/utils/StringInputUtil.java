@@ -40,7 +40,7 @@ public class StringInputUtil {
                 .build();
     }
 
-    private void validateInputString(String[] args) {
+    public void validateInputString(String[] args) {
         String fullString = String.join(" ", args);
 
         Pattern savePattern = Pattern.compile("saveToFile=(.*?\\.csv)");
