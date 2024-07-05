@@ -1,4 +1,4 @@
-# Задание №2 : Check Application : file work
+# Задание №3 : Check Application : Data Base + Unit testing
 
 Проект собирался на Gradle
 
@@ -10,19 +10,14 @@
     ```
 
 2. Запустите приложение (к примеру):
-    Для корректной работе приложения, необходимо вставить в корень проекта ваш `products.csv` и указать путь в CLI, например : `pathToFile=./products.csv`
+    Для корректной работы приложения, необходимо вставить в следующую комманду ваши `datasource.url`  `datasource.username ` и `datasource.password`
+
     ```
-    java -cp build/classes/java/main ru.clevertec.check.CheckRunner 1-1 discountCard=1111 balanceDebitCard=100 pathToFile=./products.csv
-    ```
-    ```
-    java -cp build/classes/java/main ru.clevertec.check.CheckRunner 1-1 discountCard=1111 balanceDebitCard=100 saveToFile=./error_result.csv
-    ```
-    ```
-    java -cp build/classes/java/main ru.clevertec.check.CheckRunner 1-1 discountCard=1111 balanceDebitCard=100 saveToFile=./total_result.csv pathToFile=./products.csv
+    java -cp "build/classes/java/main;lib/postgresql-42.7.1.jar" ru.clevertec.check.CheckRunner 3-1 2-5 5-1 discountCard=1111 balanceDebitCard=100 saveToFile=./result.csv datasource.url=jdbc:postgresql://localhost:5432/check datasource.username=postgres datasource.password=28072004
     ```
 3. Чек будет сгенерирован в корень проекта в файл, указанный в `saveToFile`, а также выведен в консоль
 
 4. При появлении ошибок пробрасывается кастомное исключение, а ее описание будет записано в файл `result.csv`, либо в `saveToFile`
 
 ### Стек
-Использовал Java Core, Lombok, Commons-Collections4, Commons-lang3
+Использовал Java Core, Lombok, Commons-Collections4, Commons-lang3, Junit5, AssertJ, Mockito
