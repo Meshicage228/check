@@ -49,7 +49,7 @@ public class StringInputUtil {
         Pattern savePattern = Pattern.compile("saveToFile=(.*?\\.csv)");
         Matcher saveMatcher = savePattern.matcher(fullString);
 
-        if (!(fullString.contains("datasource.url=") && fullString.contains("datasource.username=") || fullString.contains("datasource.password="))) {
+        if (!(fullString.contains("datasource.url=") && fullString.contains("datasource.username=") && fullString.contains("datasource.password="))) {
             throw new BadRequestException();
         } else if (!saveMatcher.find()) {
             throw new BadRequestException();
