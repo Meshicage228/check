@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'war'
+    id("io.freefair.lombok") version "8.6"
 }
 
 group = 'org.example'
@@ -17,13 +19,6 @@ java{
 tasks.register('wrapp', Wrapper) {
     gradleVersion = '8.5'
 }
-jar {
-    manifest {
-        attributes 'Main-Class': 'ru.clevertec.check.CheckRunner'
-    }
-
-    archiveFileName = 'postgresql-check.jar'
-}
 
 task javaVersion {
     doLast {
@@ -39,14 +34,20 @@ ext{
             postgresql        : '42.7.1',
             assertjCore       : '3.25.3',
             mockitoJunit      : '5.11.0',
-            junit             : '4.13.2'
+            junit             : '4.13.2',
+            servlet_api       : '4.0.1',
+            mapstruct         : '1.5.3.Final'
     ]
 }
 dependencies {
+    implementation "javax.servlet:javax.servlet-api:${versions.servlet_api}"
     implementation "org.apache.commons:commons-collections4:${versions.commonsCollections}"
     implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
     implementation "org.postgresql:postgresql:${versions.postgresql}"
 
+    implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
     compileOnly "org.projectlombok:lombok:${versions.lombok}"
     annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
 
