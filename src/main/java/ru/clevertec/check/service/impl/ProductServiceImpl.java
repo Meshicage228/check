@@ -1,8 +1,12 @@
 package ru.clevertec.check.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import ru.clevertec.check.domain.Product;
+import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.exceptions.InternalServerError;
+import ru.clevertec.check.mapper.ProductMapper;
 import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.ProductService;
 
@@ -11,9 +15,11 @@ import java.util.HashMap;
 
 import static java.util.Objects.nonNull;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+    @NonNull
     private ProductRepository productRepository;
+    private ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
 
     @Override
     public ArrayList<Product> formCart(HashMap<Integer, Integer> pairs) {
@@ -36,5 +42,10 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return totalProducts;
+    }
+
+    @Override
+    public ProductDto getById(Integer id) {
+        return productMapper.toDto(productRepository.getById(id));
     }
 }

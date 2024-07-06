@@ -1,11 +1,10 @@
 plugins {
     id 'java'
     id 'war'
-    id("io.freefair.lombok") version "8.6"
 }
 
 group = 'org.example'
-version = '1.0-SNAPSHOT'
+archivesBaseName = 'clevertec-check'
 
 repositories {
     mavenCentral()
@@ -14,10 +13,12 @@ repositories {
 java{
     sourceCompatibility = '21'
     toolchain {languageVersion = JavaLanguageVersion.of(21)}
+
 }
 
 tasks.register('wrapp', Wrapper) {
     gradleVersion = '8.5'
+
 }
 
 task javaVersion {
@@ -36,7 +37,8 @@ ext{
             mockitoJunit      : '5.11.0',
             junit             : '4.13.2',
             servlet_api       : '4.0.1',
-            mapstruct         : '1.5.3.Final'
+            jakson            : '2.0.1',
+            mapstruct         : '1.5.3.Final',
     ]
 }
 dependencies {
@@ -44,6 +46,8 @@ dependencies {
     implementation "org.apache.commons:commons-collections4:${versions.commonsCollections}"
     implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
     implementation "org.postgresql:postgresql:${versions.postgresql}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jakson}"
+
 
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
