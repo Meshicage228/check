@@ -9,22 +9,51 @@ repositories {
     mavenCentral()
 }
 
+java{
+    sourceCompatibility = '21'
+    toolchain {languageVersion = JavaLanguageVersion.of(21)}
+}
+
+tasks.register('wrapp', Wrapper) {
+    gradleVersion = '8.5'
+}
+jar {
+    manifest {
+        attributes 'Main-Class': 'ru.clevertec.check.CheckRunner'
+    }
+
+    archiveFileName = 'postgresql-check.jar'
+}
+
+task javaVersion {
+    doLast {
+        println "Java version: " + System.getProperty("java.version")
+    }
+}
+
 ext{
     versions = [
             commonsCollections: '4.4',
             commonsLang       : '3.13.0',
-            lombok            : '1.18.34'
+            lombok            : '1.18.34',
+            postgresql        : '42.7.1',
+            assertjCore       : '3.25.3',
+            mockitoJunit      : '5.11.0',
+            junit             : '4.13.2'
     ]
 }
-
 dependencies {
     implementation "org.apache.commons:commons-collections4:${versions.commonsCollections}"
     implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
+    implementation "org.postgresql:postgresql:${versions.postgresql}"
+
     compileOnly "org.projectlombok:lombok:${versions.lombok}"
     annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
 
+    implementation "org.assertj:assertj-core:${versions.assertjCore}"
+    implementation "org.mockito:mockito-junit-jupiter:${versions.mockitoJunit}"
     testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "org.junit.jupiter:junit-jupiter:${versions.junit}"
 }
 
 test {
