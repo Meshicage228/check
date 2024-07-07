@@ -2,7 +2,6 @@ package ru.clevertec.check.factory;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.clevertec.check.BillApplication;
 import ru.clevertec.check.repository.CardRepository;
 import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.*;
@@ -26,24 +25,14 @@ public class ServiceFactory {
         return new CardServiceImpl(createCardRepository());
     }
 
-    public static ClientService createClientService() {
-        ProductService productService = createProductService();
-        CardService cardService = createCardService();
-        return new ClientServiceImpl(productService, cardService);
-    }
-
     public static FilePrintService createFileService() {
         return new FilePrintServiceImpl();
     }
 
-    public static BillService createBillService() {
+    public static ClientService createClientService() {
+        ProductService productService = createProductService();
+        CardService cardService = createCardService();
         FilePrintService fileService = createFileService();
-        return new BillServiceImpl(fileService);
-    }
-
-    public static BillApplication createBillApplication() {
-        ClientService clientService = createClientService();
-        BillService billService = createBillService();
-        return new BillApplication(clientService, billService);
+        return new ClientServiceImpl(productService, cardService, fileService);
     }
 }
