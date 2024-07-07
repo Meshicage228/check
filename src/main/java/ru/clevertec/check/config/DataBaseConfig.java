@@ -13,11 +13,10 @@ public class DataBaseConfig {
 
     static  {
         try {
-            URL = System.getProperty("datasource.url");
-            USER = System.getProperty("datasource.username");
-            PASSWORD = System.getProperty("datasource.password");
+            URL = System.getProperty("datasource.url").trim();
+            USER = System.getProperty("datasource.username").trim();
+            PASSWORD = System.getProperty("datasource.password").trim();
             DriverManager.registerDriver(new Driver());
-            System.out.println();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
