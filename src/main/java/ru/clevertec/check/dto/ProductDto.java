@@ -1,5 +1,6 @@
 package ru.clevertec.check.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 @Getter
@@ -8,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
+@JsonIgnoreProperties(value = {"purchaseQuantity", "individualDiscount", "fullCost"})
 public class ProductDto {
     private Integer id;
     private String description;
@@ -16,5 +18,5 @@ public class ProductDto {
     private Integer purchaseQuantity;
     private Float individualDiscount;
     private Float fullCost;
-    private Boolean isWholeSale;
+    private Boolean isWholesale;
 }
