@@ -1,10 +1,11 @@
 package ru.clevertec.check.service.impl;
 
-import ru.clevertec.check.domain.CurrentClient;
-import ru.clevertec.check.domain.DiscountCard;
-import ru.clevertec.check.domain.Product;
+import ru.clevertec.check.dto.CardDto;
+import ru.clevertec.check.dto.ProductDto;
+import ru.clevertec.check.dto.UserDto;
 import ru.clevertec.check.service.FilePrintService;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,20 +19,18 @@ import static java.util.Objects.nonNull;
 
 public class FilePrintServiceImpl implements FilePrintService {
 
-    public static String TOTAL_BILL_PATH = "result.csv";
-
     @Override
-    public void createBillFile(CurrentClient currentClient, Float... arr) {
-        DiscountCard discountDebitCard = currentClient.getDiscountDebitCard();
+    public File createBillFile(UserDto userDto, Float... arr) {
+        CardDto discountDebitCard = userDto.getCardDto();
         StringBuilder stringBuilder = new StringBuilder();
-        Collections.sort(currentClient.getBasket(), Comparator.comparing(Product::getDescription));
+        Collections.sort(userDto.getProducts(), Comparator.comparing(ProductDto::getDescription));
 
         stringBuilder.append("Date;").append("Time \n");
         stringBuilder.append(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))).append(";").append(LocalTime.now().format(DateTimeFormatter.ofPattern("HH.mm.ss"))).append("\n \n");
 
         stringBuilder.append("QTY;").append("DESCRIPTION;").append("PRICE;").append("DISCOUNT;").append("TOTAL \n");
 
-        for (var product : currentClient.getBasket()) {
+        for (var product : userDto.getProducts()) {
             stringBuilder.append(product.getPurchaseQuantity()).append(";")
                     .append(product.getDescription()).append(";")
                     .append(convertNumber(product.getPrice())).append(";")
@@ -40,23 +39,27 @@ public class FilePrintServiceImpl implements FilePrintService {
         }
         if (nonNull(discountDebitCard)) {
             stringBuilder.append("\n").append("DISCOUNT CARD;").append("DISCOUNT PERCENTAGE \n");
-            stringBuilder.append(discountDebitCard.getNumber()).append(";").append(discountDebitCard.getDiscountAmount()).append("% \n");
+            stringBuilder.append(discountDebitCard.getDiscountCard()).append(";").append(discountDebitCard.getDiscountAmount()).append("% \n");
         }
         stringBuilder.append("\nTOTAL PRICE;").append("TOTAL DISCOUNT;").append("TOTAL WITH DISCOUNT \n");
         stringBuilder.append(convertNumber(arr[0])).append(";")
                 .append(convertNumber(arr[1])).append(";")
                 .append(convertNumber(arr[2])).append("\n");
 
-        try (FileWriter fileWriter = new FileWriter(TOTAL_BILL_PATH)) {
+        File billFile = new File("result.csv");
+
+        try (FileWriter fileWriter = new FileWriter(billFile)) {
             fileWriter.write(stringBuilder.toString());
-            printBillConsole(currentClient.getBasket(), arr);
+            printBillConsole(userDto.getProducts(), arr);
         } catch (Exception ex) {
-            System.out.println("Exception while creating result.csv file" + ex.getMessage());
+            System.out.println("Exception while creating result.csv file: " + ex.getMessage());
         }
+
+        return billFile;
     }
 
     @Override
-    public void printBillConsole(List<Product> productList, Float... arr) {
+    public void printBillConsole(List<ProductDto> productList, Float... arr) {
         System.out.println("********** TOTAL BILL **********");
         for (var product : productList) {
             System.out.printf("* %-20s *\n", "Description: " + product.getDescription());

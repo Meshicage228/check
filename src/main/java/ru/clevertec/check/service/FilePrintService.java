@@ -1,11 +1,13 @@
 package ru.clevertec.check.service;
 
-import ru.clevertec.check.domain.CurrentClient;
-import ru.clevertec.check.domain.Product;
+import ru.clevertec.check.dto.ProductDto;
+import ru.clevertec.check.entity.ProductEntity;
+import ru.clevertec.check.dto.UserDto;
 
+import java.io.File;
 import java.util.List;
 
 public interface FilePrintService {
-    void createBillFile(CurrentClient currentClient, Float... arr);
-    void printBillConsole(List<Product> productList, Float... arr);
+    File createBillFile(UserDto userDto, Float... arr);
+    void printBillConsole(List<ProductDto> productList, Float... arr);
 }

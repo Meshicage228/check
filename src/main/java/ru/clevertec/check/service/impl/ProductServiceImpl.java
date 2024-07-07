@@ -3,9 +3,9 @@ package ru.clevertec.check.service.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
-import ru.clevertec.check.domain.Product;
 import ru.clevertec.check.dto.ProductDto;
-import ru.clevertec.check.exceptions.InternalServerError;
+import ru.clevertec.check.exceptions.BadRequestException;
+import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.mapper.ProductMapper;
 import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.ProductService;
@@ -22,30 +22,50 @@ public class ProductServiceImpl implements ProductService {
     private ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
 
     @Override
-    public ArrayList<Product> formCart(HashMap<Integer, Integer> pairs) {
-        ArrayList<Product> totalProducts = new ArrayList<>();
-        for (var pair : pairs.entrySet()) {
+    public ArrayList<ProductDto> formCart(ArrayList<ProductDto> productDtos) throws BadRequestException, ResourceNotFoundException {
+        HashMap<Integer, Integer> productsMap = new HashMap<>();
+        ArrayList<ProductDto> basket = new ArrayList<>();
+
+        for (ProductDto product : productDtos) {
+            productsMap.merge(product.getId(), product.getQuantity(), Integer::sum);
+        }
+        for (var pair : productsMap.entrySet()) {
             Integer keyValue = pair.getKey();
             Integer productCount = pair.getValue();
 
-            Product product = productRepository.getById(keyValue);
+            ProductDto product = productMapper.toDto(productRepository.getById(keyValue));
 
             if (nonNull(product)) {
                 if (product.getQuantity() < productCount) {
-                    throw new InternalServerError();
+                    throw new BadRequestException();
                 }
                 product.setPurchaseQuantity(productCount);
-                totalProducts.add(product);
+                basket.add(product);
             } else {
-                throw new InternalServerError();
+                throw new BadRequestException();
             }
         }
 
-        return totalProducts;
+        return basket;
     }
 
     @Override
-    public ProductDto getById(Integer id) {
+    public ProductDto getById(Integer id) throws ResourceNotFoundException {
         return productMapper.toDto(productRepository.getById(id));
+    }
+
+    @Override
+    public void save(ProductDto workoutDto) {
+        productRepository.save(workoutDto);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        productRepository.deleteById(id);
+    }
+
+    @Override
+    public void fullUpdateProduct(ProductDto workoutDto, Integer id) {
+        productRepository.update(workoutDto, id);
     }
 }

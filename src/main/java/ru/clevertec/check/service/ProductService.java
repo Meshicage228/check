@@ -1,12 +1,19 @@
 package ru.clevertec.check.service;
 
-import ru.clevertec.check.domain.Product;
 import ru.clevertec.check.dto.ProductDto;
+import ru.clevertec.check.exceptions.BadRequestException;
+import ru.clevertec.check.exceptions.ResourceNotFoundException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public interface ProductService {
-    ArrayList<Product> formCart(HashMap<Integer, Integer> pairs);
-    ProductDto getById (Integer id);
+    ArrayList<ProductDto> formCart(ArrayList<ProductDto> productDtos) throws BadRequestException, ResourceNotFoundException;
+
+    ProductDto getById(Integer id) throws ResourceNotFoundException;
+
+    void save(ProductDto workoutDto);
+
+    void deleteById(Integer id);
+
+    void fullUpdateProduct(ProductDto workoutDto, Integer id);
 }

@@ -1,7 +1,8 @@
 package ru.clevertec.check.service;
 
-import ru.clevertec.check.domain.CurrentClient;
+import ru.clevertec.check.dto.UserDto;
+import ru.clevertec.check.exceptions.NotEnoughMoneyException;
 
 public interface BillService {
-    void formTotalBill(CurrentClient currentClient);
+    void formTotalBill(UserDto userDto) throws NotEnoughMoneyException;
 }
