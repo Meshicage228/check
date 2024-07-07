@@ -6,11 +6,31 @@ CREATE TABLE IF NOT EXISTS public.product (
     wholesale_product BOOLEAN
 );
 
+CREATE SEQUENCE public.product_seq
+    START WITH 21
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER TABLE public.product
+    ALTER COLUMN id SET DEFAULT nextval('public.product_seq');
+
 CREATE TABLE IF NOT EXISTS public.discount_card (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     number INTEGER,
     amount SMALLINT CHECK (amount >= 0 AND amount <= 100)
 );
+
+CREATE SEQUENCE public.discount_seq
+    START WITH 5
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER TABLE public.discount_card
+    ALTER COLUMN id SET DEFAULT nextval('public.discount_seq');
 
 INSERT INTO product (id, description, price, quantity_in_stock, wholesale_product) VALUES
     (1, 'Milk', 1.07, 10, true),
