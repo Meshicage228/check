@@ -32,7 +32,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) {
         Integer id = Integer.valueOf(req.getParameter("id"));
         ProductDto byId = null;
         try {
@@ -49,7 +49,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Integer id = Integer.valueOf(req.getParameter("id"));
         String jsonString = req.getReader().lines().collect(Collectors.joining());
         ProductDto product = objectMapper.readValue(jsonString, ProductDto.class);
@@ -66,7 +66,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String jsonString = req.getReader().lines().collect(Collectors.joining());
         ProductDto product = objectMapper.readValue(jsonString, ProductDto.class);
         try {
@@ -81,7 +81,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+    public void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         Integer id = Integer.valueOf(req.getParameter("id"));
         try {
             ProductDto byId = productService.getById(id);

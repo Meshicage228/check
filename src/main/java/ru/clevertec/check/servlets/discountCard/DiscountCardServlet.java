@@ -31,7 +31,7 @@ public class DiscountCardServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) {
         Integer id = Integer.valueOf(req.getParameter("id"));
         CardDto byId = null;
 
@@ -49,7 +49,7 @@ public class DiscountCardServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String jsonString = req.getReader().lines().collect(Collectors.joining());
         CardDto card = objectMapper.readValue(jsonString, CardDto.class);
         try {
@@ -64,7 +64,7 @@ public class DiscountCardServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
+    public void doPut(HttpServletRequest req, HttpServletResponse resp) {
         Integer id = Integer.valueOf(req.getParameter("id"));
         try {
             CardDto byId = cardService.getById(id);
@@ -81,7 +81,7 @@ public class DiscountCardServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+    public void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         Integer id = Integer.valueOf(req.getParameter("id"));
         try {
             CardDto byId = cardService.getById(id);
