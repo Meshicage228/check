@@ -2,9 +2,11 @@ package ru.clevertec.check.servlets.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.clevertec.check.dto.ProductDto;
+import ru.clevertec.check.exceptions.BadRequestException;
 import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.factory.ServiceFactory;
 import ru.clevertec.check.service.ProductService;
+import ru.clevertec.check.utils.InputDataValidator;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,10 +22,12 @@ import static javax.servlet.http.HttpServletResponse.*;
 public class ProductServlet extends HttpServlet {
     private ProductService productService;
     private ObjectMapper objectMapper;
+    private InputDataValidator validator;
 
     @Override
     public void init() {
         objectMapper = new ObjectMapper();
+        validator = new InputDataValidator();
         productService = ServiceFactory.createProductService();
     }
 
@@ -48,30 +52,32 @@ public class ProductServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Integer id = Integer.valueOf(req.getParameter("id"));
         String jsonString = req.getReader().lines().collect(Collectors.joining());
-        ProductDto workoutDto = objectMapper.readValue(jsonString, ProductDto.class);
+        ProductDto product = objectMapper.readValue(jsonString, ProductDto.class);
         try {
-            ProductDto byId = productService.getById(id);
-            productService.fullUpdateProduct(workoutDto, id);
+            validator.validateProductDto(product);
+            productService.getById(id);
+            productService.fullUpdateProduct(product, id);
             resp.setStatus(SC_CREATED);
-        } catch (ResourceNotFoundException e) {
-            resp.setStatus(SC_NOT_FOUND);
+        } catch (BadRequestException | ResourceNotFoundException e) {
+            resp.setStatus(e.getStatusCode());
         } catch (Exception e) {
             resp.setStatus(SC_INTERNAL_SERVER_ERROR);
         }
-        // TODO : Validate value
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String jsonString = req.getReader().lines().collect(Collectors.joining());
-        ProductDto workoutDto = objectMapper.readValue(jsonString, ProductDto.class);
-        // TODO : Validate value
+        ProductDto product = objectMapper.readValue(jsonString, ProductDto.class);
         try {
-            productService.save(workoutDto);
-        } catch (Exception e){
+            validator.validateProductDto(product);
+            productService.save(product);
+            resp.setStatus(SC_CREATED);
+        } catch (BadRequestException e){
+            resp.setStatus(e.getStatusCode());
+        }catch (Exception e){
             resp.setStatus(SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(SC_CREATED);
     }
 
     @Override
@@ -82,7 +88,7 @@ public class ProductServlet extends HttpServlet {
             productService.deleteById(id);
             resp.setStatus(SC_ACCEPTED);
         } catch (ResourceNotFoundException e) {
-            resp.setStatus(SC_NOT_FOUND);
+            resp.setStatus(e.getStatusCode());
         } catch (Exception e) {
             resp.setStatus(SC_INTERNAL_SERVER_ERROR);
         }

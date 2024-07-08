@@ -1,4 +1,9 @@
 package ru.clevertec.check.exceptions;
 
-public class BadRequestException extends Exception {
+import javax.servlet.http.HttpServletResponse;
+
+public class BadRequestException extends AbstractHttpException {
+    public BadRequestException() {
+        super(HttpServletResponse.SC_BAD_REQUEST);
+    }
 }
