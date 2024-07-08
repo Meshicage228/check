@@ -42,7 +42,7 @@ class ProductServiceImplTest {
 
     @Test
     @DisplayName("success cart")
-    void formCartSuccessfully() throws BadRequestException, ResourceNotFoundException {
+    public void formCartSuccessfully() throws BadRequestException, ResourceNotFoundException {
         ArrayList<ProductDto> productDtos = new ArrayList<>();
         productDtos.add(ProductDto.builder().id(1).quantity(5).build());
         productDtos.add(ProductDto.builder().id(1).quantity(3).build());
@@ -71,7 +71,7 @@ class ProductServiceImplTest {
 
     @Test
     @DisplayName("another quantity exception")
-    void anotherQuantityException() throws ResourceNotFoundException {
+    public void anotherQuantityException() throws ResourceNotFoundException {
         ArrayList<ProductDto> productDtos = new ArrayList<>();
         productDtos.add(ProductDto.builder().id(1).quantity(20).build());
 
@@ -89,7 +89,7 @@ class ProductServiceImplTest {
 
     @Test
     @DisplayName("get by id success")
-    void getByIdSuccess() throws ResourceNotFoundException {
+    public void getByIdSuccess() throws ResourceNotFoundException {
         ProductEntity product = ProductEntity.builder().id(1).quantity(10).build();
         ProductDto expectedDto = ProductDto.builder().id(1).quantity(10).build();
 
@@ -103,7 +103,7 @@ class ProductServiceImplTest {
 
     @Test
     @DisplayName("get by id throw exception")
-    void getByIdThrow() throws ResourceNotFoundException {
+    public void getByIdThrow() throws ResourceNotFoundException {
         when(productRepository.getById(12)).thenThrow(ResourceNotFoundException.class);
 
         assertThatThrownBy(() -> productService.getById(12))

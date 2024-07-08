@@ -47,7 +47,7 @@ class ClientServiceImplTest {
 
     @Test
     @DisplayName("create user dto")
-    void createUserDto() throws BadRequestException, ResourceNotFoundException {
+    public void createUserDto() throws BadRequestException, ResourceNotFoundException {
         UserDto userDto = mock(UserDto.class);
         ArrayList<ProductDto> products = new ArrayList<>(Arrays.asList(new ProductDto()));
         CardDto cardDto = new CardDto();
@@ -66,7 +66,7 @@ class ClientServiceImplTest {
 
     @Test
     @DisplayName("create bill")
-    void formTotalBill_ShouldReturnFile_WhenBalanceIsSufficient() throws Exception {
+    public void formTotalBill_ShouldReturnFile_WhenBalanceIsSufficient() throws Exception {
         UserDto userDto = mock(UserDto.class);
         ProductDto productDto = ProductDto.builder()
                 .quantity(10)
@@ -96,7 +96,7 @@ class ClientServiceImplTest {
 
     @Test
     @DisplayName("Not enough money exception")
-    void notEnoughMoneyException() {
+    public void notEnoughMoneyException() {
         UserDto userDto = mock(UserDto.class);
         ProductDto productDto = ProductDto.builder()
                 .quantity(10)

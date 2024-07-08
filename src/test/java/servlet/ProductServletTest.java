@@ -30,7 +30,7 @@ class ProductServletTest extends AbstractServletTests{
 
     @Test
     @DisplayName("get product")
-    void getProductSuccess() throws Exception {
+    public void getProductSuccess() throws Exception {
         when(request.getParameter("id")).thenReturn("1");
         when(productService.getById(1)).thenReturn(new ProductDto());
 
@@ -41,7 +41,7 @@ class ProductServletTest extends AbstractServletTests{
 
     @Test
     @DisplayName("put update product")
-    void putProductSuccess() throws Exception {
+    public void putProductSuccess() throws Exception {
         when(request.getParameter("id")).thenReturn("1");
         when(request.getReader()).thenReturn(createBufferReader(new ProductDto()));
         when(objectMapper.readValue(anyString(), eq(ProductDto.class))).thenReturn(new ProductDto());
@@ -53,7 +53,7 @@ class ProductServletTest extends AbstractServletTests{
 
     @Test
     @DisplayName("post product")
-    void postProduct() throws Exception {
+    public void postProduct() throws Exception {
         when(request.getReader()).thenReturn(createBufferReader(new ProductDto()));
         when(objectMapper.readValue(anyString(), eq(ProductDto.class))).thenReturn(new ProductDto());
 
@@ -64,7 +64,7 @@ class ProductServletTest extends AbstractServletTests{
 
     @Test
     @DisplayName("delete product")
-    void deleteProduct() {
+    public void deleteProduct() {
         when(request.getParameter("id")).thenReturn("1");
 
         productServlet.doDelete(request, response);

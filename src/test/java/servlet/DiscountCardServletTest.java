@@ -36,7 +36,7 @@ class DiscountCardServletTest extends AbstractServletTests{
 
     @Test
     @DisplayName("get method")
-    void getCardOkStatus() throws Exception {
+    public void getCardOkStatus() throws Exception {
         Integer id = 1;
         CardDto cardDto = new CardDto();
         request.setAttribute("id", id.toString());
@@ -56,7 +56,7 @@ class DiscountCardServletTest extends AbstractServletTests{
 
     @Test
     @DisplayName("card save method")
-    void saveCard() throws Exception {
+    public void saveCard() throws Exception {
         CardDto cardDto = new CardDto();
 
         when(request.getReader()).thenReturn(createBufferReader(cardDto));
@@ -70,7 +70,7 @@ class DiscountCardServletTest extends AbstractServletTests{
 
     @Test
     @DisplayName("pud update")
-    void putUpdateCard() throws Exception {
+    public void putUpdateCard() throws Exception {
         when(request.getParameter("id")).thenReturn("1");
         when(request.getReader()).thenReturn(createBufferReader(new CardDto()));
         CardDto cardDto = new CardDto();
@@ -86,7 +86,7 @@ class DiscountCardServletTest extends AbstractServletTests{
 
     @Test
     @DisplayName("delete card")
-    void cardDelete() throws Exception {
+    public void cardDelete() throws Exception {
         when(request.getParameter("id")).thenReturn("1");
         CardDto cardDto = new CardDto();
         when(cardService.getById(1)).thenReturn(cardDto);

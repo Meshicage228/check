@@ -39,7 +39,7 @@ class CardServiceImplTest {
 
     @Test
     @DisplayName("get card by number successfully")
-    void getCardByNumberSuccess() {
+    public void getCardByNumberSuccess() {
         Integer cardNumber = 12345;
         DiscountCardEntity card = DiscountCardEntity.builder().discountAmount(5).number(cardNumber).build();
         CardDto cardDto = new CardDto(cardNumber, 5);
@@ -56,7 +56,7 @@ class CardServiceImplTest {
 
     @Test
     @DisplayName("return null with null number")
-    void returnNullWhileNumberIsNull() {
+    public void returnNullWhileNumberIsNull() {
         CardDto result = cardService.formCard(null);
 
         assertThat(result).isNull();
@@ -64,7 +64,7 @@ class CardServiceImplTest {
 
     @Test
     @DisplayName("default card while number is missing in db")
-    void returnDefaultCard() {
+    public void returnDefaultCard() {
         Integer cardNumber = 123456;
 
         when(cardRepository.getByCardNumber(cardNumber)).thenReturn(null);
@@ -78,7 +78,7 @@ class CardServiceImplTest {
 
     @Test
     @DisplayName("get by id successfully")
-    void getByIdSuccessfully() throws ResourceNotFoundException {
+    public void getByIdSuccessfully() throws ResourceNotFoundException {
         Integer id = 1;
         DiscountCardEntity card = DiscountCardEntity.builder().id(id).discountAmount(10).build();
         CardDto expectedDto = new CardDto(id, 10);
@@ -93,7 +93,7 @@ class CardServiceImplTest {
 
     @Test
     @DisplayName("get by id exception")
-    void getByIdException() throws ResourceNotFoundException {
+    public void getByIdException() throws ResourceNotFoundException {
         Integer id = 99;
         when(cardRepository.getById(id)).thenThrow(ResourceNotFoundException.class);
 

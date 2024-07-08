@@ -28,7 +28,7 @@ class InputDataValidatorTest {
 
     @Test
     @DisplayName("throw when card number is null")
-    void cardNumberException() {
+    public void cardNumberException() {
         CardDto cardDto = new CardDto(null, 123456);
 
         assertThatThrownBy(() -> inputDataValidator.validateDiscountCard(cardDto))
@@ -37,14 +37,14 @@ class InputDataValidatorTest {
 
     @Test
     @DisplayName("throw when productDto is null")
-    void productDtoNull() {
+    public void productDtoNull() {
         assertThatThrownBy(() -> inputDataValidator.validateProductDto(null))
                 .isInstanceOf(BadRequestException.class);
     }
 
     @Test
     @DisplayName("throw when any product field is null")
-    void productAnyFiledNull() {
+    public void productAnyFiledNull() {
         ProductDto productDto = ProductDto.builder()
                 .purchaseQuantity(null)
                 .price(null)
@@ -58,7 +58,7 @@ class InputDataValidatorTest {
 
     @Test
     @DisplayName("empty products")
-    void userDtoNullProducts() {
+    public void userDtoNullProducts() {
         UserDto userDto = UserDto.builder()
                 .products(null)
                 .build();
@@ -69,7 +69,7 @@ class InputDataValidatorTest {
 
     @Test
     @DisplayName("empty products")
-    void userDtoEmptyProducts() {
+    public void userDtoEmptyProducts() {
         UserDto userDto = UserDto.builder()
                 .products(new ArrayList<>())
                 .build();
@@ -80,7 +80,7 @@ class InputDataValidatorTest {
 
     @Test
     @DisplayName("null product field")
-    void userDtoAnyNullProductField() {
+    public void userDtoAnyNullProductField() {
         ArrayList<ProductDto> products = new ArrayList<>();
         products.add(ProductDto.builder().id(null).build());
         UserDto userDto = UserDto.builder()
@@ -93,7 +93,7 @@ class InputDataValidatorTest {
 
     @Test
     @DisplayName("null balance debit card")
-    void userDtoNullBalanceCard() {
+    public void userDtoNullBalanceCard() {
         ArrayList<ProductDto> products = new ArrayList<>();
         products.add(ProductDto.builder()
                 .id(1)
