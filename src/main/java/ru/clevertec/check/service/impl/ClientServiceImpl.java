@@ -32,7 +32,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public File formTotalBill(UserDto userDto) throws NotEnoughMoneyException {
+    public File formTotalBill(UserDto userDto) throws NotEnoughMoneyException, ResourceNotFoundException {
         ArrayList<ProductDto> basket = userDto.getProducts();
         CardDto discountDebitCard = userDto.getCardDto();
 
@@ -56,6 +56,8 @@ public class ClientServiceImpl implements ClientService {
         if (userDto.getBalanceDebitCard() < totalWithDiscount) {
             throw new NotEnoughMoneyException();
         }
+
+        productService.decreaseProductAmount(basket);
 
         return fileService.createBillFile(userDto, roundNumber(totalWithNoDiscount), roundNumber(totalDiscount), roundNumber(totalWithDiscount));
     }

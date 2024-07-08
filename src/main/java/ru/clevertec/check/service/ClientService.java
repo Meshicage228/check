@@ -9,5 +9,5 @@ import java.io.File;
 
 public interface ClientService {
     UserDto formClient(UserDto userDto) throws BadRequestException, ResourceNotFoundException;
-    File formTotalBill(UserDto userDto) throws NotEnoughMoneyException;
+    File formTotalBill(UserDto userDto) throws NotEnoughMoneyException, ResourceNotFoundException;
 }

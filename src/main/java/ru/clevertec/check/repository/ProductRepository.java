@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static ru.clevertec.check.utils.SQLCommands.*;
 
@@ -78,6 +79,22 @@ public class ProductRepository implements AbstractRepository<ProductEntity, Prod
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error while deleting product: " + id, e);
+        }
+    }
+
+    public void decreaseAmount(ArrayList<ProductDto> basket) throws ResourceNotFoundException {
+        for(var product : basket) {
+            ProductEntity byId = getById(product.getId());
+            Integer newQuantity = byId.getQuantity() - product.getPurchaseQuantity();
+            try (Connection connection = DataBaseConfig.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_QUANTITY)) {
+                preparedStatement.setInt(1, newQuantity);
+                preparedStatement.setInt(2, product.getId());
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException("Error while setting new quantity to the product: " + product.getDescription(), e);
+            }
         }
     }
 }

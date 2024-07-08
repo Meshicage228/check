@@ -16,4 +16,6 @@ public interface ProductService {
     void deleteById(Integer id);
 
     void fullUpdateProduct(ProductDto workoutDto, Integer id);
+
+    void decreaseProductAmount(ArrayList<ProductDto> basket) throws ResourceNotFoundException;
 }

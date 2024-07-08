@@ -14,4 +14,5 @@ public class SQLCommands {
     public static String SAVE_DISCOUNT_CARD = "INSERT INTO public.discount_card (number, amount) VALUES (?,?)";
     public static String DELETE_DISCOUNT_CAR_BY_ID = "DELETE FROM public.discount_card as dc WHERE dc.id = ?";
     public static String FULL_UPDATE_DISCOUNT_CARD = "UPDATE public.discount_card SET number = ?, amount = ? WHERE id = ?";
+    public static String UPDATE_PRODUCT_QUANTITY = "UPDATE public.product SET quantity_in_stock = ? WHERE id = ?";
 }

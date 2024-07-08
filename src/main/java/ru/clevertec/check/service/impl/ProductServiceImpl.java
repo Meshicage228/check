@@ -68,4 +68,9 @@ public class ProductServiceImpl implements ProductService {
     public void fullUpdateProduct(ProductDto workoutDto, Integer id) {
         productRepository.update(workoutDto, id);
     }
+
+    @Override
+    public void decreaseProductAmount(ArrayList<ProductDto> basket) throws ResourceNotFoundException {
+        productRepository.decreaseAmount(basket);
+    }
 }
