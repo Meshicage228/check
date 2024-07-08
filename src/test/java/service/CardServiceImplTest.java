@@ -4,15 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.clevertec.check.domain.DiscountCard;
+import ru.clevertec.check.dto.CardDto;
+import ru.clevertec.check.entity.DiscountCardEntity;
+import ru.clevertec.check.exceptions.ResourceNotFoundException;
+import ru.clevertec.check.mapper.CardMapper;
 import ru.clevertec.check.repository.CardRepository;
-import ru.clevertec.check.service.CardService;
 import ru.clevertec.check.service.impl.CardServiceImpl;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Card service tests")
@@ -22,54 +26,78 @@ class CardServiceImplTest {
     @Mock
     private CardRepository cardRepository;
 
-    private CardService cardService;
+    @Mock
+    private CardMapper cardMapper;
+
+    @InjectMocks
+    private CardServiceImpl cardService;
 
     @BeforeEach
     void setUp() {
-        cardService = new CardServiceImpl(cardRepository);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    @DisplayName("Null card")
-    void nullCardNumber() {
-        DiscountCard result = cardService.formCard(null);
+    @DisplayName("get card by number successfully")
+    void getCardByNumberSuccess() {
+        Integer cardNumber = 12345;
+        DiscountCardEntity card = DiscountCardEntity.builder().discountAmount(5).number(cardNumber).build();
+        CardDto cardDto = new CardDto(cardNumber, 5);
+
+        when(cardRepository.getByCardNumber(cardNumber)).thenReturn(card);
+        when(cardMapper.toDto(card)).thenReturn(cardDto);
+
+        CardDto result = cardService.formCard(cardNumber);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getDiscountCard()).isEqualTo(cardNumber);
+        assertThat(result.getDiscountAmount()).isEqualTo(5);
+    }
+
+    @Test
+    @DisplayName("return null with null number")
+    void returnNullWhileNumberIsNull() {
+        CardDto result = cardService.formCard(null);
+
         assertThat(result).isNull();
     }
 
     @Test
-    @DisplayName("Any other card 2%")
-    void anyOtherCard() {
-        String cardNumber = "12345";
-        DiscountCard resultCard = DiscountCard.builder()
-                .number(Integer.parseInt(cardNumber))
-                .discountAmount(2)
-                .build();
+    @DisplayName("default card while number is missing in db")
+    void returnDefaultCard() {
+        Integer cardNumber = 123456;
 
-        when(cardRepository.getByCardNumber(anyInt())).thenReturn(null);
+        when(cardRepository.getByCardNumber(cardNumber)).thenReturn(null);
 
-        DiscountCard result = cardService.formCard(cardNumber);
+        CardDto result = cardService.formCard(cardNumber);
 
         assertThat(result).isNotNull();
-        assertThat(result.getNumber()).isEqualTo(resultCard.getNumber());
-        assertThat(result.getDiscountAmount()).isEqualTo(resultCard.getDiscountAmount());
+        assertThat(result.getDiscountCard()).isEqualTo(cardNumber);
+        assertThat(result.getDiscountAmount()).isEqualTo(2);
     }
 
     @Test
-    @DisplayName("Existing card 3-5%")
-    void existingCard() {
-        String cardNumber = "1111";
+    @DisplayName("get by id successfully")
+    void getByIdSuccessfully() throws ResourceNotFoundException {
+        Integer id = 1;
+        DiscountCardEntity card = DiscountCardEntity.builder().id(id).discountAmount(10).build();
+        CardDto expectedDto = new CardDto(id, 10);
 
-        DiscountCard resultCard = DiscountCard.builder()
-                .number(Integer.parseInt(cardNumber))
-                .discountAmount(3)
-                .build();
+        when(cardRepository.getById(id)).thenReturn(card);
+        when(cardMapper.toDto(card)).thenReturn(expectedDto);
 
-        when(cardRepository.getByCardNumber(anyInt())).thenReturn(resultCard);
+        CardDto result = cardService.getById(id);
 
-        DiscountCard result = cardService.formCard(cardNumber);
+        assertThat(result).isEqualToComparingFieldByField(expectedDto);
+    }
 
-        assertThat(result).isNotNull();
-        assertThat(result.getNumber()).isEqualTo(resultCard.getNumber());
-        assertThat(result.getDiscountAmount()).isEqualTo(resultCard.getDiscountAmount());
+    @Test
+    @DisplayName("get by id exception")
+    void getByIdException() throws ResourceNotFoundException {
+        Integer id = 99;
+        when(cardRepository.getById(id)).thenThrow(ResourceNotFoundException.class);
+
+        assertThatThrownBy(() -> cardService.getById(id))
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 }

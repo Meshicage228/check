@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.check.config.DataBaseConfig;
-import ru.clevertec.check.domain.DiscountCard;
+import ru.clevertec.check.entity.DiscountCardEntity;
 import ru.clevertec.check.repository.CardRepository;
 
 import java.sql.*;
@@ -33,7 +33,7 @@ class CardRepositoryTest extends DBconnection{
         when(resultSet.getInt("number")).thenReturn(123456);
         when(resultSet.getInt("amount")).thenReturn(10);
 
-        DiscountCard result = cardRepository.getByCardNumber(123456);
+        DiscountCardEntity result = cardRepository.getByCardNumber(123456);
 
         assertNotNull(result);
         assertEquals(1, result.getId());

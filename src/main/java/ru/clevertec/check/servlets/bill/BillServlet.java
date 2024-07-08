@@ -32,7 +32,7 @@ public class BillServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String jsonString = req.getReader().lines().collect(Collectors.joining());
         UserDto request = objectMapper.readValue(jsonString, UserDto.class);
         File file = null;
