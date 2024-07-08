@@ -5,7 +5,7 @@ build/
 !**/src/test/**/build/
 
 ### custom git ignore
-
+.idea/artifacts
 .idea/vcs.xml
 .idea/misc.xml
 .idea/gradle.xml
@@ -13,7 +13,8 @@ gradle/wrapper
 gradlew.bata
 gradlew.bat
 gradlew
-
+.idea/csv-editor.xml
+.idea/uiDesigner.xml
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
