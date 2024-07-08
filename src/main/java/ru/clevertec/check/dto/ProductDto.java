@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-@JsonIgnoreProperties(value = {"purchaseQuantity", "individualDiscount", "fullCost"})
+@JsonIgnoreProperties(value = {"purchaseQuantity", "individualDiscount", "fullCost", "id"})
 public class ProductDto {
     private Integer id;
     private String description;
