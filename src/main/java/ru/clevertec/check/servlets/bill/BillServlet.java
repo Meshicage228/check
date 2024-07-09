@@ -42,24 +42,30 @@ public class BillServlet extends HttpServlet {
             file = clientService.formTotalBill(userDto);
 
             assert file != null;
-            try(InputStream in = new FileInputStream(file);
-                OutputStream out = resp.getOutputStream()) {
-
-                byte[] buffer = new byte[1048];
-                resp.setContentType("text/csv");
-                resp.setHeader("Content-disposition", "attachment; filename=result.csv");
-                resp.setStatus(SC_OK);
-
-                int numBytesRead;
-                while ((numBytesRead = in.read(buffer)) > 0) {
-                    out.write(buffer, 0, numBytesRead);
-                }
-            }
+            printFile(resp, file);
+            resp.setContentType("text/csv");
+            resp.setHeader("Content-disposition", "attachment; filename=result.csv");
+            resp.setStatus(SC_OK);
 
         } catch (BadRequestException | NotEnoughMoneyException | ResourceNotFoundException e) {
             resp.setStatus(e.getStatusCode());
         } catch (Exception e){
             resp.setStatus(SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public void printFile(HttpServletResponse resp, File file) {
+        try(InputStream in = new FileInputStream(file);
+            OutputStream out = resp.getOutputStream()) {
+
+            byte[] buffer = new byte[1048];
+
+            int numBytesRead;
+            while ((numBytesRead = in.read(buffer)) > 0) {
+                out.write(buffer, 0, numBytesRead);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -33,6 +33,9 @@ public class InputDataValidator {
             if(isNull(product.getId()) || isNull(product.getQuantity())){
                 throw new BadRequestException();
             }
+            if(product.getQuantity() < 0 || product.getId() < 0){
+                throw new BadRequestException();
+            }
         }
         if(isNull(userDto.getBalanceDebitCard())){
             throw new BadRequestException();
