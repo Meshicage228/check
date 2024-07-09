@@ -65,7 +65,7 @@ class ClientServiceImplTest {
 
     @Test
     @DisplayName("create bill")
-    public void formTotalBill_ShouldReturnFile_WhenBalanceIsSufficient() throws Exception {
+    public void fromTotalBill() throws Exception {
         UserDto userDto = mock(UserDto.class);
         ProductDto productDto = ProductDto.builder()
                 .quantity(10)

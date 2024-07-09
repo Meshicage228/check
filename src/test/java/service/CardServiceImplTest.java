@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.entity.DiscountCardEntity;
 import ru.clevertec.check.exceptions.ResourceNotFoundException;
-import ru.clevertec.check.mapper.CardMapper;
 import ru.clevertec.check.repository.CardRepository;
 import ru.clevertec.check.service.impl.CardServiceImpl;
 
@@ -26,9 +25,6 @@ class CardServiceImplTest {
     @Mock
     private CardRepository cardRepository;
 
-    @Mock
-    private CardMapper cardMapper;
-
     @InjectMocks
     private CardServiceImpl cardService;
 
@@ -42,10 +38,8 @@ class CardServiceImplTest {
     public void getCardByNumberSuccess() {
         Integer cardNumber = 12345;
         DiscountCardEntity card = DiscountCardEntity.builder().discountAmount(5).number(cardNumber).build();
-        CardDto cardDto = new CardDto(cardNumber, 5);
 
         when(cardRepository.getByCardNumber(cardNumber)).thenReturn(card);
-        when(cardMapper.toDto(card)).thenReturn(cardDto);
 
         CardDto result = cardService.formCard(cardNumber);
 
@@ -79,14 +73,18 @@ class CardServiceImplTest {
     @Test
     @DisplayName("get by id successfully")
     public void getByIdSuccessfully() throws ResourceNotFoundException {
-        Integer id = 1;
-        DiscountCardEntity card = DiscountCardEntity.builder().id(id).discountAmount(10).build();
-        CardDto expectedDto = new CardDto(id, 10);
+        Integer carNumber = 123;
+        DiscountCardEntity card = DiscountCardEntity.builder()
+                .id(carNumber)
+                .discountAmount(10)
+                .number(carNumber)
+                .build();
 
-        when(cardRepository.getById(id)).thenReturn(card);
-        when(cardMapper.toDto(card)).thenReturn(expectedDto);
+        CardDto expectedDto = new CardDto(carNumber, 10);
 
-        CardDto result = cardService.getById(id);
+        when(cardRepository.getById(carNumber)).thenReturn(card);
+
+        CardDto result = cardService.getById(carNumber);
 
         assertThat(result).isEqualToComparingFieldByField(expectedDto);
     }

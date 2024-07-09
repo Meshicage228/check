@@ -29,9 +29,6 @@ class ProductServiceImplTest {
     @Mock
     private ProductRepository productRepository;
 
-    @Mock
-    private ProductMapper productMapper;
-
     @InjectMocks
     private ProductServiceImpl productService;
 
@@ -59,8 +56,6 @@ class ProductServiceImplTest {
 
         when(productRepository.getById(1)).thenReturn(product1);
         when(productRepository.getById(2)).thenReturn(product2);
-        when(productMapper.toDto(product1)).thenReturn(ProductDto.builder().id(1).quantity(10).build());
-        when(productMapper.toDto(product2)).thenReturn(ProductDto.builder().id(2).quantity(5).build());
 
         ArrayList<ProductDto> result = productService.formCart(productDtos);
 
@@ -81,7 +76,6 @@ class ProductServiceImplTest {
                 .build();
 
         when(productRepository.getById(1)).thenReturn(product1);
-        when(productMapper.toDto(product1)).thenReturn(ProductDto.builder().id(1).quantity(2).build());
 
         assertThatThrownBy(() -> productService.formCart(productDtos))
                 .isInstanceOf(BadRequestException.class);
@@ -94,11 +88,11 @@ class ProductServiceImplTest {
         ProductDto expectedDto = ProductDto.builder().id(1).quantity(10).build();
 
         when(productRepository.getById(1)).thenReturn(product);
-        when(productMapper.toDto(product)).thenReturn(expectedDto);
 
         ProductDto result = productService.getById(1);
 
-        assertThat(result).isEqualToComparingFieldByField(expectedDto);
+        assertThat(result.getId()).isEqualTo(expectedDto.getId());
+        assertThat(result.getQuantity()).isEqualTo(expectedDto.getQuantity());
     }
 
     @Test
