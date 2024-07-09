@@ -1,6 +1,5 @@
 package service;
 
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -80,7 +79,7 @@ class ClientServiceImplTest {
                 .discountCard(123)
                 .discountAmount(5)
                 .build();
-        File billFile = new File("bill.txt");
+        File billFile = mock(File.class);
 
         when(userDto.getProducts()).thenReturn(basket);
         when(userDto.getCardDto()).thenReturn(discountDebitCard);
