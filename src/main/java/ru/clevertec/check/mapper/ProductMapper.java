@@ -4,7 +4,9 @@ import org.mapstruct.Mapper;
 import ru.clevertec.check.entity.ProductEntity;
 import ru.clevertec.check.dto.ProductDto;
 
-@Mapper
+@Mapper(
+        componentModel = "spring"
+)
 public interface ProductMapper {
     ProductDto toDto(ProductEntity product);
 }

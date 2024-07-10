@@ -1,7 +1,7 @@
 package ru.clevertec.check.service.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.dto.UserDto;
@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import static java.util.Objects.nonNull;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@Service
 public class ClientServiceImpl implements ClientService {
-    public ProductService productService;
-    public CardService cardService;
-    public FilePrintService fileService;
+    public final ProductService productService;
+    public final CardService cardService;
+    public final FilePrintService fileService;
 
     @Override
     public UserDto formClient(UserDto userDto) throws BadRequestException, ResourceNotFoundException {

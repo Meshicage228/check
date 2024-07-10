@@ -1,8 +1,7 @@
 package ru.clevertec.check.service.impl;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.exceptions.BadRequestException;
 import ru.clevertec.check.exceptions.ResourceNotFoundException;
@@ -16,10 +15,10 @@ import java.util.HashMap;
 import static java.util.Objects.nonNull;
 
 @RequiredArgsConstructor
+@Service
 public class ProductServiceImpl implements ProductService {
-    @NonNull
-    private ProductRepository productRepository;
-    private ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Override
     public ArrayList<ProductDto> formCart(ArrayList<ProductDto> productDtos) throws BadRequestException, ResourceNotFoundException {

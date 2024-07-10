@@ -1,5 +1,6 @@
 package ru.clevertec.check.utils;
 
+import org.springframework.stereotype.Component;
 import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.dto.UserDto;
@@ -7,6 +8,7 @@ import ru.clevertec.check.exceptions.BadRequestException;
 
 import static java.util.Objects.isNull;
 
+@Component
 public class InputDataValidator {
     public void validateDiscountCard(CardDto cardDto) throws BadRequestException {
         if(isNull(cardDto.getDiscountAmount()) || isNull(cardDto.getDiscountCard())){

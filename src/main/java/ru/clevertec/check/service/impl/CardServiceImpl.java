@@ -1,8 +1,7 @@
 package ru.clevertec.check.service.impl;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.mapper.CardMapper;
@@ -13,10 +12,10 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @RequiredArgsConstructor
+@Service
 public class CardServiceImpl implements CardService {
-    @NonNull
-    private CardRepository cardRepository;
-    private CardMapper cardMapper = Mappers.getMapper(CardMapper.class);
+    private final CardRepository cardRepository;
+    private final CardMapper cardMapper;
 
     @Override
     public CardDto formCard(Integer cardNumber) {

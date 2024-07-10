@@ -1,5 +1,6 @@
 package ru.clevertec.check.service.impl;
 
+import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.dto.UserDto;
@@ -17,6 +18,7 @@ import java.util.Locale;
 
 import static java.util.Objects.nonNull;
 
+@Service
 public class FilePrintServiceImpl implements FilePrintService {
 
     @Override
