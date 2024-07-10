@@ -1,6 +1,7 @@
 package ru.clevertec.check.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.clevertec.check.entity.DiscountCardEntity;
@@ -20,8 +21,11 @@ public class CardRepository implements AbstractRepository<DiscountCardEntity, Ca
     private final CardRowMapper cardMapper;
 
     public DiscountCardEntity getByCardNumber(Integer cardNumber) {
-        // todo check null
-       return jdbcTemplate.queryForObject(DISCOUNT_BY_NUMBER, cardMapper, cardNumber);
+        try {
+            return jdbcTemplate.queryForObject(DISCOUNT_BY_NUMBER, cardMapper, cardNumber);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -36,7 +40,7 @@ public class CardRepository implements AbstractRepository<DiscountCardEntity, Ca
     }
 
     @Override
-    public  void deleteById(Integer id) {
+    public void deleteById(Integer id) {
         jdbcTemplate.update(DELETE_DISCOUNT_CAR_BY_ID, id);
     }
 
