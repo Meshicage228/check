@@ -1,9 +1,9 @@
 package ru.clevertec.check.exceptions;
 
-import javax.servlet.http.HttpServletResponse;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 public class BadRequestException extends AbstractHttpException {
     public BadRequestException() {
-        super(HttpServletResponse.SC_BAD_REQUEST);
+        super(BAD_REQUEST);
     }
 }
