@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="db.changelog-master.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="create_product_sequence" author="Vlad">
+        <createSequence sequenceName="product_seq" incrementBy="1" minValue="21" schemaName="sequences"/>
+    </changeSet>
+
+    <changeSet id="create_discount_sequence" author="Vlad">
+        <createSequence sequenceName="discount_seq" incrementBy="1" minValue="5" schemaName="sequences"/>
+    </changeSet>
+
+</databaseChangeLog>

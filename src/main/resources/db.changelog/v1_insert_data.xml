@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="db.changelog-master.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="insert-data-into-product" author="Vlad">
+        <insert tableName="product">
+            <column name="id" valueNumeric="1"/>
+            <column name="description" value="Milk"/>
+            <column name="price" valueNumeric="1.07"/>
+            <column name="quantity_in_stock" valueNumeric="10"/>
+            <column name="wholesale_product" valueBoolean="true"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="2"/>
+            <column name="description" value="Cream 400g"/>
+            <column name="price" valueNumeric="2.71"/>
+            <column name="quantity_in_stock" valueNumeric="20"/>
+            <column name="wholesale_product" valueBoolean="true"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="3"/>
+            <column name="description" value="Yogurt 400g"/>
+            <column name="price" valueNumeric="2.10"/>
+            <column name="quantity_in_stock" valueNumeric="7"/>
+            <column name="wholesale_product" valueBoolean="true"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="4"/>
+            <column name="description" value="Packed potatoes 1kg"/>
+            <column name="price" valueNumeric="1.47"/>
+            <column name="quantity_in_stock" valueNumeric="30"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="5"/>
+            <column name="description" value="Packed cabbage 1kg"/>
+            <column name="price" valueNumeric="1.19"/>
+            <column name="quantity_in_stock" valueNumeric="15"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="6"/>
+            <column name="description" value="Packed tomatoes 350g"/>
+            <column name="price" valueNumeric="1.60"/>
+            <column name="quantity_in_stock" valueNumeric="50"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="7"/>
+            <column name="description" value="Packed apples 1kg"/>
+            <column name="price" valueNumeric="2.78"/>
+            <column name="quantity_in_stock" valueNumeric="18"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="8"/>
+            <column name="description" value="Packed oranges 1kg"/>
+            <column name="price" valueNumeric="3.20"/>
+            <column name="quantity_in_stock" valueNumeric="12"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="9"/>
+            <column name="description" value="Packed bananas 1kg"/>
+            <column name="price" valueNumeric="1.10"/>
+            <column name="quantity_in_stock" valueNumeric="25"/>
+            <column name="wholesale_product" valueBoolean="true"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="10"/>
+            <column name="description" value="Packed beef fillet 1kg"/>
+            <column name="price" valueNumeric="12.80"/>
+            <column name="quantity_in_stock" valueNumeric="7"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="11"/>
+            <column name="description" value="Packed pork fillet 1kg"/>
+            <column name="price" valueNumeric="8.52"/>
+            <column name="quantity_in_stock" valueNumeric="14"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="12"/>
+            <column name="description" value="Packed chicken breasts 1kg"/>
+            <column name="price" valueNumeric="10.75"/>
+            <column name="quantity_in_stock" valueNumeric="18"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="13"/>
+            <column name="description" value="Baguette 360g"/>
+            <column name="price" valueNumeric="1.30"/>
+            <column name="quantity_in_stock" valueNumeric="10"/>
+            <column name="wholesale_product" valueBoolean="true"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="14"/>
+            <column name="description" value="Drinking water 1.5l"/>
+            <column name="price" valueNumeric="0.80"/>
+            <column name="quantity_in_stock" valueNumeric="100"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="15"/>
+            <column name="description" value="Olive oil 500ml"/>
+            <column name="price" valueNumeric="5.30"/>
+            <column name="quantity_in_stock" valueNumeric="16"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="16"/>
+            <column name="description" value="Sunflower oil 1l"/>
+            <column name="price" valueNumeric="1.20"/>
+            <column name="quantity_in_stock" valueNumeric="12"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="17"/>
+            <column name="description" value="Chocolate Ritter sport 100g"/>
+            <column name="price" valueNumeric="1.10"/>
+            <column name="quantity_in_stock" valueNumeric="50"/>
+            <column name="wholesale_product" valueBoolean="true"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="18"/>
+            <column name="description" value="Paulaner 0.5l"/>
+            <column name="price" valueNumeric="1.10"/>
+            <column name="quantity_in_stock" valueNumeric="100"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="19"/>
+            <column name="description" value="Whiskey Jim Beam 1l"/>
+            <column name="price" valueNumeric="13.99"/>
+            <column name="quantity_in_stock" valueNumeric="30"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueNumeric="20"/>
+            <column name="description" value="Whiskey Jack Daniels 1l"/>
+            <column name="price" valueNumeric="17.19"/>
+            <column name="quantity_in_stock" valueNumeric="20"/>
+            <column name="wholesale_product" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-data-into-discount-card" author="Vlad">
+        <insert tableName="discount_card">
+            <column name="id" valueNumeric="1"/>
+            <column name="number" valueNumeric="1111"/>
+            <column name="amount" valueNumeric="3"/>
+        </insert>
+        <insert tableName="discount_card">
+            <column name="id" valueNumeric="2"/>
+            <column name="number" valueNumeric="2222"/>
+            <column name="amount" valueNumeric="3"/>
+        </insert>
+        <insert tableName="discount_card">
+            <column name="id" valueNumeric="3"/>
+            <column name="number" valueNumeric="3333"/>
+            <column name="amount" valueNumeric="4"/>
+        </insert>
+        <insert tableName="discount_card">
+            <column name="id" valueNumeric="4"/>
+            <column name="number" valueNumeric="4444"/>
+            <column name="amount" valueNumeric="5"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

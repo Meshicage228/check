@@ -1,30 +1,74 @@
 plugins {
     id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group = 'org.example'
-version = '1.0-SNAPSHOT'
+archivesBaseName = 'clevertec-check'
 
 repositories {
     mavenCentral()
+}
+
+java{
+    sourceCompatibility = '21'
+    toolchain {languageVersion = JavaLanguageVersion.of(21)}
+
+}
+
+tasks.register('wrapp', Wrapper) {
+    gradleVersion = '8.5'
+
+}
+
+task javaVersion {
+    doLast {
+        println "Java version: " + System.getProperty("java.version")
+    }
 }
 
 ext{
     versions = [
             commonsCollections: '4.4',
             commonsLang       : '3.13.0',
-            lombok            : '1.18.34'
+            lombok            : '1.18.34',
+            postgresql        : '42.7.2',
+            assertjCore       : '3.25.3',
+            mockitoJunit      : '5.11.0',
+            junit             : '4.13.2',
+            liquibase         : '4.27.0',
+            hibernateValidator: '8.0.1.Final',
+            javaxValidation   : '2.0.1.Final',
+            mapstruct         : '1.5.3.Final',
     ]
 }
-
 dependencies {
     implementation "org.apache.commons:commons-collections4:${versions.commonsCollections}"
     implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
+    implementation "org.postgresql:postgresql:${versions.postgresql}"
+    implementation "org.liquibase:liquibase-core:${versions.liquibase}"
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation "org.hibernate.validator:hibernate-validator:${versions.hibernateValidator}"
+    implementation "javax.validation:validation-api:${versions.javaxValidation}"
+
+    implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
     compileOnly "org.projectlombok:lombok:${versions.lombok}"
     annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
 
+    implementation "org.assertj:assertj-core:${versions.assertjCore}"
+    implementation "org.mockito:mockito-junit-jupiter:${versions.mockitoJunit}"
     testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "org.junit.jupiter:junit-jupiter:${versions.junit}"
 }
 
 test {

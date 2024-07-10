@@ -1,0 +1,12 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/check
+    username: postgres
+    password: 28072004
+  liquibase:
+    liquibase-schema: public
+    change-log: db.changelog/change-logs.xml
+    default-schema: public
