@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="db.changelog-master.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="create-products" author="Vlad">
+        <createTable tableName="product" schemaName="public">
+            <column name="id" type="BIGINT" defaultValueComputed="nextval('sequences.product_seq')"
+                    remarks="product ID">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(50)" remarks="product description">
+            </column>
+            <column name="price" type="DECIMAL(10,2)" remarks="products price">
+                <constraints checkConstraint="price >= 0"/>
+            </column>
+            <column name="quantity_in_stock" type="INTEGER" remarks="products quantity">
+                <constraints checkConstraint="quantity_in_stock >= 0"/>
+            </column>
+            <column name="wholesale_product" type="BOOLEAN" remarks="product is wholesale">
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="create-discountCard" author="Vlad">
+        <createTable tableName="discount_card" schemaName="public">
+            <column name="id" type="BIGINT" defaultValueComputed="nextval('sequences.discount_seq')"
+                    remarks="card ID">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="number" type="INTEGER" remarks="card number">
+            </column>
+            <column name="amount" type="SMALLINT" remarks="card discount amount">
+                <constraints checkConstraint="amount &gt;= 0 AND amount &lt;= 100"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
