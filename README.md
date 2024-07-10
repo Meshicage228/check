@@ -20,4 +20,4 @@
 4. Использование JakartaValidation для валидации входящих DTO
 
 ### Стек
-Использовал Java Core, Lombok, Commons-Collections4, Commons-lang3, Servlet-API, Liquibase, SpringBoot, JakartaValidation, JdbcTemplate
+Использовал Java Core, Lombok, Commons-Collections4, Commons-lang3, Liquibase, SpringBoot, JakartaValidation, JdbcTemplate
