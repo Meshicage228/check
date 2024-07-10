@@ -1,5 +1,6 @@
 package ru.clevertec.check.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,6 +10,8 @@ import lombok.*;
 @Builder
 @ToString
 public class CardDto {
+    @NotNull
     private Integer discountCard;
+    @NotNull
     private Integer discountAmount;
 }

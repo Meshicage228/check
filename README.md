@@ -1,19 +1,23 @@
-# Задание №4 : Check Application : RESTFUL - API (Servlet)
+# Задание №5 : Check Application : Additional
 
 Проект собирался на Gradle
 
 ## Запуск приложения
 
-1. Для начала выполните сборку проекта + war:
-    ```
-    gradle build
-    gradle build war
-    ```
-2. В `resources` присутствует `data.sql`, где находятся sql-скрипты, которые нужно запустить в той последовательности, в которой они расположены.
+1. Для начала настройте приложение:
+   В `application.yaml` в папке `resources` укажите свои `datasource.name` `datasource.password` и `datasource.url`
 
-3. В ветке присутствует smarttomcat, а именно catalina.properties, из которых считывались DB переменные:
+2. Запустите приложение через CheckRunner класс
 
-    Для корректной работы приложения, необходимо запустить tomcat с catalina.properties, где указать ваши `datasource.url`  `datasource.username ` и `datasource.password`
+## Что нового?
+
+1. Приложение на SpringBoot
+
+2. Миграция базы данных PostgreSQL при помощи Liquibase
+
+3. Использование JdbcTemplate и RowMapper для удобства и уменьшения кода
+
+4. Использование JakartaValidation для валидации входящих DTO
 
 ### Стек
-Использовал Java Core, Lombok, Commons-Collections4, Commons-lang3, Junit5, AssertJ, Mockito, Servlet-API
+Использовал Java Core, Lombok, Commons-Collections4, Commons-lang3, Servlet-API, Liquibase, SpringBoot, JakartaValidation, JdbcTemplate
