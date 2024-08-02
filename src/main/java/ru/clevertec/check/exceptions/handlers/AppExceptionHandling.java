@@ -28,7 +28,7 @@ public class AppExceptionHandling {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Void> getResourceNotFound(Exception e){
+    public ResponseEntity<Void> getAllExceptions(Exception e){
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
     }
 }

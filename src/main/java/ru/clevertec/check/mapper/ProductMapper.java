@@ -9,4 +9,6 @@ import ru.clevertec.check.dto.ProductDto;
 )
 public interface ProductMapper {
     ProductDto toDto(ProductEntity product);
+
+    ProductEntity toEntity(ProductDto productDto);
 }

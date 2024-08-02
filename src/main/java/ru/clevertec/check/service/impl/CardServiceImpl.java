@@ -1,5 +1,6 @@
 package ru.clevertec.check.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.CardDto;
@@ -22,7 +23,7 @@ public class CardServiceImpl implements CardService {
         if(isNull(cardNumber)){
             return null;
         }
-        CardDto byCardNumber = cardMapper.toDto(cardRepository.getByCardNumber(cardNumber));
+        CardDto byCardNumber = cardMapper.toDto(cardRepository.getByNumber(cardNumber));
 
         return nonNull(byCardNumber) ? byCardNumber :
                 CardDto.builder()
@@ -31,8 +32,9 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional
     public void save(CardDto workoutDto) {
-        cardRepository.save(workoutDto);
+        cardRepository.save(cardMapper.toEntity(workoutDto));
     }
 
     @Override
@@ -41,12 +43,13 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional
     public void fullUpdateCard(CardDto cardDto, Integer id) {
-        cardRepository.update(cardDto, id);
+        cardRepository.updateCard(cardDto.getDiscountCard(), cardDto.getDiscountAmount(), id);
     }
 
     @Override
     public CardDto getById(Integer id) throws ResourceNotFoundException {
-        return cardMapper.toDto(cardRepository.getById(id));
+        return cardMapper.toDto(cardRepository.getReferenceById(id));
     }
 }

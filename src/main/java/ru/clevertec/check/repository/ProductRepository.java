@@ -1,57 +1,19 @@
 package ru.clevertec.check.repository;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.clevertec.check.entity.ProductEntity;
-import ru.clevertec.check.dto.ProductDto;
-import ru.clevertec.check.exceptions.ResourceNotFoundException;
-import ru.clevertec.check.mapper.row.ProductRowMapper;
-
-import java.util.ArrayList;
-
-import static java.util.Objects.isNull;
-import static ru.clevertec.check.utils.SQLCommands.*;
 
 @Repository
-@RequiredArgsConstructor
-public class ProductRepository implements AbstractRepository<ProductEntity, ProductDto> {
-    private final JdbcTemplate jdbcTemplate;
-    private final ProductRowMapper productMapper;
+public interface ProductRepository extends JpaRepository<ProductEntity, Integer> {
 
-    @Override
-    public ProductEntity getById(Integer id) throws ResourceNotFoundException {
-        ProductEntity productEntity = jdbcTemplate.queryForObject(PRODUCT_BY_ID, productMapper, id);
+    @Modifying
+    @Query("UPDATE ProductEntity AS p SET p.description = ?1, p.price = ?2, p.quantity = ?3, p.isWholesale = ?4 WHERE p.id = ?5")
+    void fullUpdate(String description, Float price, Integer quantity, Boolean isWholeSale, Integer id);
 
-        if (isNull(productEntity)) {
-            throw new ResourceNotFoundException();
-        }
-
-        return productEntity;
-    }
-
-    @Override
-    public void save(ProductDto workoutDto) {
-        jdbcTemplate.update(SAVE_PRODUCT, new Object[]{workoutDto.getDescription(), workoutDto.getPrice(),
-                workoutDto.getQuantity(), workoutDto.getIsWholesale()});
-    }
-
-    @Override
-    public void deleteById(Integer id) {
-        jdbcTemplate.update(DELETE_PRODUCT_BY_ID, id);
-    }
-
-    @Override
-    public void update(ProductDto workoutDto, Integer id) {
-        jdbcTemplate.update(FULL_PRODUCT_UPDATE, new Object[]{workoutDto.getDescription(), workoutDto.getPrice(),
-                workoutDto.getQuantity(), workoutDto.getIsWholesale(), id});
-    }
-
-    public void decreaseAmount(ArrayList<ProductDto> basket) throws ResourceNotFoundException {
-        for (var product : basket) {
-            ProductEntity byId = getById(product.getId());
-            Integer newQuantity = byId.getQuantity() - product.getPurchaseQuantity();
-            jdbcTemplate.update(UPDATE_PRODUCT_QUANTITY, new Object[]{newQuantity, product.getId()});
-        }
-    }
+    @Modifying
+    @Query("UPDATE ProductEntity AS p SET p.quantity = ?1 WHERE p.id = ?2")
+    void decreaseAmount(Integer quantity, Integer id);
 }

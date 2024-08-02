@@ -1,5 +1,6 @@
 package ru.clevertec.check.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.ProductDto;
@@ -32,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
             Integer keyValue = pair.getKey();
             Integer productCount = pair.getValue();
 
-            ProductDto product = productMapper.toDto(productRepository.getById(keyValue));
+            ProductDto product = productMapper.toDto(productRepository.getReferenceById(keyValue));
 
             if (nonNull(product)) {
                 if (product.getQuantity() < productCount) {
@@ -54,8 +55,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void save(ProductDto workoutDto) {
-        productRepository.save(workoutDto);
+    public void save(ProductDto productDto) {
+        productRepository.save(productMapper.toEntity(productDto));
     }
 
     @Override
@@ -64,12 +65,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void fullUpdateProduct(ProductDto workoutDto, Integer id) {
-        productRepository.update(workoutDto, id);
+        productRepository.fullUpdate(workoutDto.getDescription(), workoutDto.getPrice(),
+                workoutDto.getQuantity(), workoutDto.getIsWholesale(), id);
     }
 
     @Override
+    @Transactional
     public void decreaseProductAmount(ArrayList<ProductDto> basket) throws ResourceNotFoundException {
-        productRepository.decreaseAmount(basket);
+        for (var product : basket) {
+            ProductDto byId = getById(product.getId());
+            Integer newQuantity = byId.getQuantity() - product.getPurchaseQuantity();
+            productRepository.decreaseAmount(newQuantity, product.getId());
+        }
     }
 }

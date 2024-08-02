@@ -11,4 +11,7 @@ import ru.clevertec.check.dto.CardDto;
 public interface CardMapper {
     @Mapping(target = "discountCard", source = "number")
     CardDto toDto(DiscountCardEntity discountCard);
+
+    @Mapping(target = "number", source = "discountCard")
+    DiscountCardEntity toEntity(CardDto cardDto);
 }

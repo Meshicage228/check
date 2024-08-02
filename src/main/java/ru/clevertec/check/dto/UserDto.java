@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class UserDto {
     @Valid
     private ArrayList<ProductDto> products;
-    @NotNull(groups = OnFormBillMarker.class)
+
     private Integer discountCard;
     @JsonIgnore
     private CardDto cardDto;

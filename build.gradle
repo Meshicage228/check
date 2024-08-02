@@ -47,6 +47,7 @@ ext{
 dependencies {
     implementation "org.apache.commons:commons-collections4:${versions.commonsCollections}"
     implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.5.2.Final'
     implementation "org.postgresql:postgresql:${versions.postgresql}"
     implementation "org.liquibase:liquibase-core:${versions.liquibase}"
 
