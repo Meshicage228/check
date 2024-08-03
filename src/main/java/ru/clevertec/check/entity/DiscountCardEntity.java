@@ -2,6 +2,7 @@ package ru.clevertec.check.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Check;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +17,8 @@ import lombok.*;
         schema = "sequences",
         sequenceName = "discount_seq",
         initialValue = 5, allocationSize = 1)
+
+@Check(constraints = "amount > 0 AND amount <= 100")
 public class DiscountCardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "discount_seq_gen")

@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.CardDto;
-import ru.clevertec.check.exceptions.ResourceNotFoundException;
+import ru.clevertec.check.entity.DiscountCardEntity;
 import ru.clevertec.check.mapper.CardMapper;
 import ru.clevertec.check.repository.CardRepository;
 import ru.clevertec.check.service.CardService;
@@ -33,8 +33,9 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public void save(CardDto workoutDto) {
-        cardRepository.save(cardMapper.toEntity(workoutDto));
+    public CardDto save(CardDto workoutDto) {
+        DiscountCardEntity save = cardRepository.save(cardMapper.toEntity(workoutDto));
+        return cardMapper.toDto(save);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardDto getById(Integer id) throws ResourceNotFoundException {
+    public CardDto getById(Integer id) {
         return cardMapper.toDto(cardRepository.getReferenceById(id));
     }
 }

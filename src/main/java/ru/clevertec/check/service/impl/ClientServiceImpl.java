@@ -7,7 +7,6 @@ import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.dto.UserDto;
 import ru.clevertec.check.exceptions.BadRequestException;
 import ru.clevertec.check.exceptions.NotEnoughMoneyException;
-import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.service.*;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class ClientServiceImpl implements ClientService {
     public final FilePrintService fileService;
 
     @Override
-    public UserDto formClient(UserDto userDto) throws BadRequestException, ResourceNotFoundException {
+    public UserDto formClient(UserDto userDto) throws BadRequestException {
         return UserDto.builder()
                 .products(productService.formCart(userDto.getProducts()))
                 .cardDto(cardService.formCard(userDto.getDiscountCard()))
@@ -32,7 +31,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public File formTotalBill(UserDto userDto) throws NotEnoughMoneyException, ResourceNotFoundException {
+    public File formTotalBill(UserDto userDto) throws NotEnoughMoneyException {
         ArrayList<ProductDto> basket = userDto.getProducts();
         CardDto discountDebitCard = userDto.getCardDto();
 

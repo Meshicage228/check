@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @ToString
 public class CardDto {
+    private Integer id;
     @NotNull
     private Integer discountCard;
     @NotNull

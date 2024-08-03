@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public abstract class AbstractHttpException extends Exception{
+public abstract class AbstractHttpException extends RuntimeException{
     private final HttpStatus statusCode;
 }

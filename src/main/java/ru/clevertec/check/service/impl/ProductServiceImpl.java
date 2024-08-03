@@ -4,8 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.ProductDto;
+import ru.clevertec.check.entity.ProductEntity;
 import ru.clevertec.check.exceptions.BadRequestException;
-import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.mapper.ProductMapper;
 import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.ProductService;
@@ -22,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     @Override
-    public ArrayList<ProductDto> formCart(ArrayList<ProductDto> productDtos) throws BadRequestException, ResourceNotFoundException {
+    public ArrayList<ProductDto> formCart(ArrayList<ProductDto> productDtos) throws BadRequestException {
         HashMap<Integer, Integer> productsMap = new HashMap<>();
         ArrayList<ProductDto> basket = new ArrayList<>();
 
@@ -50,13 +50,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getById(Integer id) throws ResourceNotFoundException {
-        return productMapper.toDto(productRepository.getById(id));
+    public ProductDto getById(Integer id) {
+        return productMapper.toDto(productRepository.getReferenceById(id));
     }
 
     @Override
-    public void save(ProductDto productDto) {
-        productRepository.save(productMapper.toEntity(productDto));
+    public ProductDto save(ProductDto productDto) {
+        ProductEntity save = productRepository.save(productMapper.toEntity(productDto));
+        return productMapper.toDto(save);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void decreaseProductAmount(ArrayList<ProductDto> basket) throws ResourceNotFoundException {
+    public void decreaseProductAmount(ArrayList<ProductDto> basket) {
         for (var product : basket) {
             ProductDto byId = getById(product.getId());
             Integer newQuantity = byId.getQuantity() - product.getPurchaseQuantity();

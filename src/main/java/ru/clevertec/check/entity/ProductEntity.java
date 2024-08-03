@@ -2,6 +2,7 @@ package ru.clevertec.check.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Check;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +17,9 @@ import lombok.*;
         schema = "sequences",
         sequenceName = "product_seq",
         initialValue = 21, allocationSize = 1)
+
+@Check(constraints = "price >= 0")
+@Check(constraints = "quantity_in_stock >= 0")
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq_gen")

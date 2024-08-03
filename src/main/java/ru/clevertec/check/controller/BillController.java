@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.clevertec.check.dto.UserDto;
 import ru.clevertec.check.exceptions.BadRequestException;
 import ru.clevertec.check.exceptions.NotEnoughMoneyException;
-import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.service.impl.ClientServiceImpl;
 import ru.clevertec.check.utils.markers.OnFormBillMarker;
 
@@ -31,7 +30,7 @@ public class BillController {
 
     @PostMapping
     public ResponseEntity<Resource> createBill(@RequestBody @Validated(OnFormBillMarker.class) UserDto userDto,
-                                               BindingResult bindingResult) throws NotEnoughMoneyException, ResourceNotFoundException, BadRequestException, IOException {
+                                               BindingResult bindingResult) throws NotEnoughMoneyException, BadRequestException, IOException {
         if(bindingResult.hasFieldErrors()){
             throw new BadRequestException();
         }
