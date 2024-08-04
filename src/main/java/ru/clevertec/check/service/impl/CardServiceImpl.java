@@ -2,6 +2,7 @@ package ru.clevertec.check.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.entity.DiscountCardEntity;
@@ -33,6 +34,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
+    @Cacheable("onSave")
     public CardDto save(CardDto workoutDto) {
         DiscountCardEntity save = cardRepository.save(cardMapper.toEntity(workoutDto));
         return cardMapper.toDto(save);
@@ -50,6 +52,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Cacheable("onId")
     public CardDto getById(Integer id) {
         return cardMapper.toDto(cardRepository.getReferenceById(id));
     }
