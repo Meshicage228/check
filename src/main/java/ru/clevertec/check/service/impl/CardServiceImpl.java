@@ -10,8 +10,9 @@ import ru.clevertec.check.mapper.CardMapper;
 import ru.clevertec.check.repository.CardRepository;
 import ru.clevertec.check.service.CardService;
 
+import java.util.Optional;
+
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 @RequiredArgsConstructor
 @Service
@@ -24,12 +25,12 @@ public class CardServiceImpl implements CardService {
         if(isNull(cardNumber)){
             return null;
         }
-        CardDto byCardNumber = cardMapper.toDto(cardRepository.getByNumber(cardNumber));
 
-        return nonNull(byCardNumber) ? byCardNumber :
-                CardDto.builder()
+        return Optional.ofNullable(cardMapper.toDto(cardRepository.getByNumber(cardNumber)))
+                .orElseGet(() -> CardDto.builder()
                         .discountAmount(2)
-                        .discountCard(cardNumber).build();
+                        .discountCard(cardNumber)
+                        .build());
     }
 
     @Override

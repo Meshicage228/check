@@ -35,20 +35,19 @@ public class ClientServiceImpl implements ClientService {
         ArrayList<ProductDto> basket = userDto.getProducts();
         CardDto discountDebitCard = userDto.getCardDto();
 
-        Float totalWithNoDiscount = 0f;
-        Float totalDiscount = 0f;
+        Float totalWithNoDiscount = basket.stream()
+                .map(product -> roundNumber(product.getPrice() * product.getPurchaseQuantity()))
+                .reduce(0f, Float::sum);
 
-        for (var product : basket) {
-            Float productTotal = roundNumber(product.getPrice() * product.getPurchaseQuantity());
-            Float discountRate = product.getIsWholesale() && product.getPurchaseQuantity() >= 5 ? 10 : (nonNull(discountDebitCard) ? discountDebitCard.getDiscountAmount() : 0f);
-            Float discountMoneyAmount = roundNumber(productTotal * discountRate / 100);
-
-            product.setIndividualDiscount(discountMoneyAmount);
-            product.setFullCost(productTotal);
-
-            totalWithNoDiscount += productTotal;
-            totalDiscount += discountMoneyAmount;
-        }
+        Float totalDiscount = basket.stream()
+                .map(product -> {
+                    Float discountRate = product.getIsWholesale() && product.getPurchaseQuantity() >= 5 ? 10 : (nonNull(discountDebitCard) ? discountDebitCard.getDiscountAmount() : 0f);
+                    Float discountMoneyAmount = roundNumber(product.getPrice() * product.getPurchaseQuantity() * discountRate / 100);
+                    product.setIndividualDiscount(discountMoneyAmount);
+                    product.setFullCost(roundNumber(product.getPrice() * product.getPurchaseQuantity()));
+                    return discountMoneyAmount;
+                })
+                .reduce(0f, Float::sum);
 
         Float totalWithDiscount = totalWithNoDiscount - totalDiscount;
 

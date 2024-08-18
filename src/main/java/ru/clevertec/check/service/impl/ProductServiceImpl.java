@@ -10,10 +10,8 @@ import ru.clevertec.check.mapper.ProductMapper;
 import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.ProductService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import static java.util.Objects.nonNull;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -23,30 +21,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ArrayList<ProductDto> formCart(ArrayList<ProductDto> productDtos) throws BadRequestException {
-        HashMap<Integer, Integer> productsMap = new HashMap<>();
-        ArrayList<ProductDto> basket = new ArrayList<>();
+        return productDtos.stream()
+                .collect(Collectors.groupingBy(ProductDto::getId, Collectors.summingInt(ProductDto::getQuantity)))
+                .entrySet()
+                .stream()
+                .map(entry -> {
+                    Integer key = entry.getKey();
+                    Integer value = entry.getValue();
 
-        for (ProductDto product : productDtos) {
-            productsMap.merge(product.getId(), product.getQuantity(), Integer::sum);
-        }
-        for (var pair : productsMap.entrySet()) {
-            Integer keyValue = pair.getKey();
-            Integer productCount = pair.getValue();
-
-            ProductDto product = productMapper.toDto(productRepository.getReferenceById(keyValue));
-
-            if (nonNull(product)) {
-                if (product.getQuantity() < productCount) {
-                    throw new BadRequestException();
-                }
-                product.setPurchaseQuantity(productCount);
-                basket.add(product);
-            } else {
-                throw new BadRequestException();
-            }
-        }
-
-        return basket;
+                    return Optional.of(productRepository.getReferenceById(key))
+                            .filter(productEntity -> productEntity.getQuantity() < value)
+                            .map(productEntity -> {
+                                ProductDto product = productMapper.toDto(productEntity);
+                                product.setPurchaseQuantity(value);
+                                return product;
+                            })
+                            .orElseThrow(BadRequestException::new);
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -75,10 +67,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void decreaseProductAmount(ArrayList<ProductDto> basket) {
-        for (var product : basket) {
+        basket.forEach(product -> {
             ProductDto byId = getById(product.getId());
             Integer newQuantity = byId.getQuantity() - product.getPurchaseQuantity();
             productRepository.decreaseAmount(newQuantity, product.getId());
-        }
+        });
     }
 }
