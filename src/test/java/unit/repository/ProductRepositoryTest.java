@@ -1,14 +1,13 @@
-package repository;
+package unit.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.check.config.DataBaseConfig;
-import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.entity.ProductEntity;
 import ru.clevertec.check.exceptions.ResourceNotFoundException;
@@ -17,10 +16,8 @@ import ru.clevertec.check.repository.ProductRepository;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @DisplayName("Product repository tests")
@@ -32,7 +29,7 @@ class ProductRepositoryTest extends DBconnection {
     private ProductDto productDto;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws SQLException {
         productDto = ProductDto.builder()
                 .id(1)
                 .description("Description")
@@ -41,13 +38,14 @@ class ProductRepositoryTest extends DBconnection {
                 .quantity(10)
                 .isWholesale(true)
                 .build();
+
+        when(DataBaseConfig.getConnection()).thenReturn(connection);
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
     }
 
     @Test
     @DisplayName("get existing product by id")
     public void getProductCart() throws SQLException, ResourceNotFoundException {
-        given(DataBaseConfig.getConnection()).willReturn(connection);
-        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getInt("id")).thenReturn(1);
@@ -69,9 +67,6 @@ class ProductRepositoryTest extends DBconnection {
     @Test
     @DisplayName("save product valid data")
     public void saveProductSuccess() throws SQLException {
-        when(DataBaseConfig.getConnection()).thenReturn(connection);
-        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-
         productRepository.save(productDto);
 
         verify(preparedStatement).executeUpdate();
@@ -80,9 +75,6 @@ class ProductRepositoryTest extends DBconnection {
     @Test
     @DisplayName("delete product valid data")
     public void deleteProductValidData() throws SQLException {
-        when(DataBaseConfig.getConnection()).thenReturn(connection);
-        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-
         productRepository.deleteById(1);
 
         verify(preparedStatement).executeUpdate();
@@ -91,9 +83,6 @@ class ProductRepositoryTest extends DBconnection {
     @Test
     @DisplayName("update product valid data")
     public void updateValidData() throws SQLException {
-        when(DataBaseConfig.getConnection()).thenReturn(connection);
-        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-
         productRepository.update(productDto, 1);
 
         verify(preparedStatement).executeUpdate();
@@ -110,14 +99,37 @@ class ProductRepositoryTest extends DBconnection {
                 .quantity(100)
                 .build();
 
-        when(DataBaseConfig.getConnection()).thenReturn(connection);
-        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(productRepository.getById(anyInt())).thenReturn(build);
 
         productRepository.decreaseAmount(basket);
 
         verify(preparedStatement).executeUpdate();
+    }
+
+    @Nested
+    @DisplayName("Check methods throw an exceptions")
+    class CheckExceptions {
+        @Test
+        @DisplayName("check ResourceNotFound exception")
+        public void getById_ResourceNotFoundException() throws SQLException {
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(false);
+
+            assertThrows(ResourceNotFoundException.class, () -> productRepository.getById(1));
+        }
+
+        @Test
+        @DisplayName("check Runtime exceptions")
+        public void save_RuntimeException() throws SQLException{
+            when(preparedStatement.executeUpdate()).thenThrow(new SQLException());
+            when(preparedStatement.executeQuery()).thenThrow(new SQLException());
+
+            assertThrows(RuntimeException.class, () -> productRepository.save(productDto));
+            assertThrows(RuntimeException.class, () -> productRepository.deleteById(1));
+            assertThrows(RuntimeException.class, () -> productRepository.update(productDto, 1));
+            assertThrows(RuntimeException.class, () -> productRepository.getById(1));
+        }
     }
 }
