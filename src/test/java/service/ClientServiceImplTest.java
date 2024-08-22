@@ -6,8 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.dto.UserDto;
@@ -29,7 +27,6 @@ import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.*;
 
 @DisplayName("Client service tests")
-@MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class ClientServiceImplTest {
     @Mock

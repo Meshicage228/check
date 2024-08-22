@@ -30,9 +30,6 @@ public class ServiceFactory {
     }
 
     public static ClientService createClientService() {
-        ProductService productService = createProductService();
-        CardService cardService = createCardService();
-        FilePrintService fileService = createFileService();
-        return new ClientServiceImpl(productService, cardService, fileService);
+        return new ClientServiceImpl(createProductService(), createCardService(), createFileService());
     }
 }

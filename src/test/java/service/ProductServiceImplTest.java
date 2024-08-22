@@ -1,18 +1,15 @@
 package service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.entity.ProductEntity;
 import ru.clevertec.check.exceptions.BadRequestException;
 import ru.clevertec.check.exceptions.ResourceNotFoundException;
-import ru.clevertec.check.mapper.ProductMapper;
 import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.impl.ProductServiceImpl;
 
@@ -31,11 +28,6 @@ class ProductServiceImplTest {
 
     @InjectMocks
     private ProductServiceImpl productService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     @DisplayName("success cart")
