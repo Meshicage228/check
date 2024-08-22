@@ -2,15 +2,16 @@ package unit.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import ru.clevertec.check.dto.CardDto;
+import ru.clevertec.check.exceptions.BadRequestException;
+import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.service.CardService;
 import ru.clevertec.check.servlets.discountCard.DiscountCardServlet;
 import javax.servlet.http.HttpServletResponse;
@@ -19,9 +20,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 
-import static javax.servlet.http.HttpServletResponse.SC_CREATED;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -113,5 +114,39 @@ class DiscountCardServletTest extends AbstractServletTests{
     public BufferedReader createBufferReader(CardDto userDto) throws IOException {
         String jsonString = new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(userDto);
         return new BufferedReader(new StringReader(jsonString));
+    }
+
+    @Nested
+    @DisplayName("check exceptions")
+    public class CheckExceptions{
+
+        @Test
+        @DisplayName("doGet doDelete doPut : 404 - Not Found Exception")
+        public void doGetResourceNotFound() throws Exception {
+            when(request.getParameter(anyString())).thenReturn("1");
+            when(cardService.getById(anyInt())).thenThrow(new ResourceNotFoundException());
+
+            discountCardServlet.doGet(request, response);
+            discountCardServlet.doPut(request, response);
+            discountCardServlet.doDelete(request, response);
+
+            assertThrows(ResourceNotFoundException.class, () -> cardService.getById(1));
+            verify(response, times(3)).setStatus(SC_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("doPost : 400 - BadRequest")
+        public void testDoPost_BadRequestException() throws Exception {
+            CardDto build = CardDto.builder()
+                    .discountAmount(12).build();
+
+            when(request.getReader()).thenReturn(createBufferReader(build));
+            when(objectMapper.readValue(anyString(), eq(CardDto.class))).thenReturn(build);
+            doThrow(new BadRequestException()).when(validator).validateDiscountCard(any(CardDto.class));
+
+            discountCardServlet.doPost(request, response);
+
+            verify(response).setStatus(SC_BAD_REQUEST);
+        }
     }
 }
