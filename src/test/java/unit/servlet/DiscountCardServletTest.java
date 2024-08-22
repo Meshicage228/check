@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,6 +21,7 @@ import java.io.StringReader;
 
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -31,27 +33,38 @@ class DiscountCardServletTest extends AbstractServletTests{
     @Mock
     private CardService cardService;
 
+    @Mock
+    private PrintWriter writer;
+
     @InjectMocks
     private DiscountCardServlet discountCardServlet;
 
     @Test
     @DisplayName("get method")
     public void getCardOkStatus() throws Exception {
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         Integer id = 1;
-        CardDto cardDto = new CardDto();
+        CardDto cardDto = CardDto.builder()
+                .discountCard(1)
+                .discountAmount(13)
+                .build();
+        String json = new ObjectMapper().writeValueAsString(cardDto);
+
         request.setAttribute("id", id.toString());
-        PrintWriter printWriter = new PrintWriter(cardDto.toString());
 
         when(request.getParameter(anyString())).thenReturn("1");
         when(cardService.getById(id)).thenReturn(cardDto);
-        when(response.getWriter()).thenReturn(printWriter);
-        when(objectMapper.writeValueAsString(cardDto)).thenReturn(cardDto.toString());
+        when(response.getWriter()).thenReturn(writer);
+        when(objectMapper.writeValueAsString(cardDto)).thenReturn(json);
+
         discountCardServlet.doGet(request, response);
 
         verify(response).setStatus(SC_OK);
         verify(cardService).getById(id);
         verify(response).setContentType("application/json");
-        verify(objectMapper).writeValueAsString(cardDto);
+        verify(response.getWriter()).write(captor.capture());
+
+        assertEquals(json, captor.getValue());
     }
 
     @Test
