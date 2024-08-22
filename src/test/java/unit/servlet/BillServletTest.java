@@ -62,7 +62,6 @@ class BillServletTest extends AbstractServletTests{
         when(objectMapper.readValue(anyString(), eq(UserDto.class))).thenReturn(globalUser);
         when(clientService.formClient(any(UserDto.class))).thenReturn(globalUser);
         when(clientService.formTotalBill(any(UserDto.class))).thenReturn(mockFile);
-        when(clientService.formTotalBill(any(UserDto.class))).thenReturn(mockFile);
         doNothing().when(billServlet).printFile(response, mockFile);
         billServlet.doPost(request, response);
 

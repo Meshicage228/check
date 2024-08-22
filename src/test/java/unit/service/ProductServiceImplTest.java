@@ -1,6 +1,5 @@
 package unit.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,11 +35,6 @@ class ProductServiceImplTest {
 
     @Captor
     private ArgumentCaptor<Integer> intCaptor;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     @DisplayName("success cart")
