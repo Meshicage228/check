@@ -109,7 +109,8 @@ class CardRepositoryTest extends DBconnection{
     class CheckExceptions{
 
         @Test
-        public void testGetById_ResourceNotFoundException() throws SQLException {
+        @DisplayName("get by id : Resource not found exception")
+        public void recourseNotFound() throws SQLException {
             when(preparedStatement.executeQuery()).thenReturn(resultSet);
             when(resultSet.next()).thenReturn(false);
 
@@ -117,7 +118,8 @@ class CardRepositoryTest extends DBconnection{
         }
 
         @Test
-        public void testSave_SQLException() throws SQLException {
+        @DisplayName("Runtime exceptions")
+        public void runtimeCheck() throws SQLException {
             when(preparedStatement.executeQuery()).thenThrow(new SQLException());
             when(preparedStatement.executeUpdate()).thenThrow(new SQLException());
 
