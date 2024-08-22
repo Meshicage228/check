@@ -1,6 +1,5 @@
 package unit.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,11 +31,6 @@ class CardServiceImplTest {
     @InjectMocks
     private CardServiceImpl cardService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     @DisplayName("get card by number successfully")
     public void getCardByNumberSuccess() {
@@ -53,7 +47,8 @@ class CardServiceImplTest {
     }
 
     @Test
-    void save() {
+    @DisplayName("save method : arguments")
+    public void save() {
         CardDto cardDto = new CardDto();
 
         cardService.save(cardDto);
@@ -63,7 +58,8 @@ class CardServiceImplTest {
     }
 
     @Test
-    void deleteById() {
+    @DisplayName("delete method : arguments")
+    public void deleteById() {
         Integer id = 1;
 
         cardService.deleteById(id);
@@ -73,7 +69,8 @@ class CardServiceImplTest {
     }
 
     @Test
-    void fullUpdateCard() {
+    @DisplayName("update method : arguments")
+    public void fullUpdateCard() {
         CardDto cardDto = new CardDto();
         Integer id = 1;
 
