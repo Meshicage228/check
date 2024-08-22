@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-
 @DisplayName("Discount card servlet tests")
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
@@ -132,6 +131,26 @@ class DiscountCardServletTest extends AbstractServletTests{
 
             assertThrows(ResourceNotFoundException.class, () -> cardService.getById(1));
             verify(response, times(3)).setStatus(SC_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("All methods : 500 - Internal Server Error")
+        public void checkInternalServerError() throws Exception {
+            CardDto build = CardDto.builder()
+                    .discountAmount(12).build();
+
+            when(request.getParameter(anyString())).thenReturn("1");
+            when(request.getReader()).thenReturn(createBufferReader(build));
+            when(objectMapper.readValue(anyString(), eq(CardDto.class))).thenReturn(build);
+            doThrow(new RuntimeException()).when(validator).validateDiscountCard(any(CardDto.class));
+            when(cardService.getById(anyInt())).thenThrow(new RuntimeException());
+
+            discountCardServlet.doGet(request, response);
+            discountCardServlet.doPut(request, response);
+            discountCardServlet.doDelete(request, response);
+            discountCardServlet.doPost(request, response);
+
+            verify(response, times(4)).setStatus(SC_INTERNAL_SERVER_ERROR);
         }
 
         @Test
