@@ -4,9 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.entity.DiscountCardEntity;
@@ -14,8 +12,8 @@ import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.repository.CardRepository;
 import ru.clevertec.check.service.impl.CardServiceImpl;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Card service tests")
@@ -24,6 +22,12 @@ class CardServiceImplTest {
 
     @Mock
     private CardRepository cardRepository;
+
+    @Captor
+    private ArgumentCaptor<CardDto> cardDtoCapture;
+
+    @Captor
+    private ArgumentCaptor<Integer> intCapture;
 
     @InjectMocks
     private CardServiceImpl cardService;
@@ -46,6 +50,38 @@ class CardServiceImplTest {
         assertThat(result).isNotNull();
         assertThat(result.getDiscountCard()).isEqualTo(cardNumber);
         assertThat(result.getDiscountAmount()).isEqualTo(5);
+    }
+
+    @Test
+    void save() {
+        CardDto cardDto = new CardDto();
+
+        cardService.save(cardDto);
+
+        verify(cardRepository).save(cardDtoCapture.capture());
+        assertThat(cardDto).isEqualTo(cardDtoCapture.getValue());
+    }
+
+    @Test
+    void deleteById() {
+        Integer id = 1;
+
+        cardService.deleteById(id);
+
+        verify(cardRepository).deleteById(intCapture.capture());
+        assertThat(id).isEqualTo(intCapture.getValue());
+    }
+
+    @Test
+    void fullUpdateCard() {
+        CardDto cardDto = new CardDto();
+        Integer id = 1;
+
+        cardService.fullUpdateCard(cardDto, id);
+
+        verify(cardRepository).update(cardDtoCapture.capture(), intCapture.capture());
+        assertThat(cardDto).isEqualTo(cardDtoCapture.getValue());
+        assertThat(id).isEqualTo(intCapture.getValue());
     }
 
     @Test

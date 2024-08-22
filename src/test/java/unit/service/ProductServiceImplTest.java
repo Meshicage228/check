@@ -4,15 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.check.dto.ProductDto;
 import ru.clevertec.check.entity.ProductEntity;
 import ru.clevertec.check.exceptions.BadRequestException;
 import ru.clevertec.check.exceptions.ResourceNotFoundException;
-import ru.clevertec.check.mapper.ProductMapper;
 import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.impl.ProductServiceImpl;
 
@@ -20,6 +17,8 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Product service tests")
@@ -31,6 +30,12 @@ class ProductServiceImplTest {
 
     @InjectMocks
     private ProductServiceImpl productService;
+
+    @Captor
+    private ArgumentCaptor<ProductDto> productDtoCapture;
+
+    @Captor
+    private ArgumentCaptor<Integer> intCaptor;
 
     @BeforeEach
     void setUp() {
@@ -65,23 +70,6 @@ class ProductServiceImplTest {
     }
 
     @Test
-    @DisplayName("another quantity exception")
-    public void anotherQuantityException() throws ResourceNotFoundException {
-        ArrayList<ProductDto> productDtos = new ArrayList<>();
-        productDtos.add(ProductDto.builder().id(1).quantity(20).build());
-
-        ProductEntity product1 = ProductEntity.builder()
-                .id(1)
-                .quantity(2)
-                .build();
-
-        when(productRepository.getById(1)).thenReturn(product1);
-
-        assertThatThrownBy(() -> productService.formCart(productDtos))
-                .isInstanceOf(BadRequestException.class);
-    }
-
-    @Test
     @DisplayName("get by id success")
     public void getByIdSuccess() throws ResourceNotFoundException {
         ProductEntity product = ProductEntity.builder().id(1).quantity(10).build();
@@ -96,11 +84,77 @@ class ProductServiceImplTest {
     }
 
     @Test
+    @DisplayName("save method invoked correctly")
+    public void save() {
+        ProductDto workoutDto = new ProductDto();
+
+        productService.save(workoutDto);
+
+        verify(productRepository).save(productDtoCapture.capture());
+        assertEquals(workoutDto, productDtoCapture.getValue());
+    }
+
+    @Test
+    @DisplayName("delete by id method invoked correctly")
+    public void deleteById() {
+        Integer id = 1;
+
+        productService.deleteById(id);
+
+        verify(productRepository).deleteById(intCaptor.capture());
+        assertEquals(id, intCaptor.getValue());
+    }
+
+    @Test
+    @DisplayName("put update method invoked correctly")
+    public void fullUpdateProduct() {
+        ProductDto workoutDto = new ProductDto();
+        Integer id = 1;
+
+        productService.fullUpdateProduct(workoutDto, id);
+
+
+        verify(productRepository).update(productDtoCapture.capture(), intCaptor.capture());
+        assertEquals(workoutDto, productDtoCapture.getValue());
+        assertEquals(id, intCaptor.getValue());
+    }
+
+    @Test
+    @DisplayName("decrease Product amount method invoked correctly")
+    public void decreaseProductAmount() throws ResourceNotFoundException {
+        ArgumentCaptor<ArrayList<ProductDto>> captor = ArgumentCaptor.forClass(ArrayList.class);
+        ArrayList<ProductDto> basket = new ArrayList<>();
+        basket.add(new ProductDto());
+
+        productService.decreaseProductAmount(basket);
+
+        verify(productRepository).decreaseAmount(captor.capture());
+        assertEquals(basket, captor.getValue());
+    }
+
+    @Test
     @DisplayName("get by id throw exception")
     public void getByIdThrow() throws ResourceNotFoundException {
         when(productRepository.getById(12)).thenThrow(ResourceNotFoundException.class);
 
         assertThatThrownBy(() -> productService.getById(12))
                 .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("another quantity exception")
+    public void anotherQuantityException() throws ResourceNotFoundException {
+        ArrayList<ProductDto> productDtos = new ArrayList<>();
+        productDtos.add(ProductDto.builder().id(1).quantity(20).build());
+
+        ProductEntity product1 = ProductEntity.builder()
+                .id(1)
+                .quantity(2)
+                .build();
+
+        when(productRepository.getById(1)).thenReturn(product1);
+
+        assertThatThrownBy(() -> productService.formCart(productDtos))
+                .isInstanceOf(BadRequestException.class);
     }
 }
