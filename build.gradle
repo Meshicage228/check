@@ -32,7 +32,8 @@ jacocoTestReport {
 
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['ru/clevertec/check/service/impl/FilePrintServiceImpl**'])
+            fileTree(dir: it, exclude: ['ru/clevertec/check/service/impl/FilePrintServiceImpl**',
+                                        'ru/clevertec/check/config/DataBaseConfig**'])
         })
     }
 }
