@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'war'
+    id 'jacoco'
 }
 
 group = 'org.example'
@@ -8,6 +9,32 @@ archivesBaseName = 'clevertec-check'
 
 repositories {
     mavenCentral()
+}
+
+test{
+    finalizedBy jacocoTestReport
+}
+jacoco{
+    toolVersion = "0.8.12"
+}
+jacocoTestCoverageVerification{
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
+}
+jacocoTestReport {
+    dependsOn test
+
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['ru/clevertec/check/service/impl/FilePrintServiceImpl**'])
+        })
+    }
 }
 
 java{
