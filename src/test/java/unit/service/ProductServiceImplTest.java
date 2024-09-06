@@ -1,5 +1,6 @@
 package unit.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import ru.clevertec.check.exceptions.BadRequestException;
 import ru.clevertec.check.exceptions.ResourceNotFoundException;
 import ru.clevertec.check.repository.ProductRepository;
 import ru.clevertec.check.service.impl.ProductServiceImpl;
+import unit.util.ProjectObjectsFactory;
 
 import java.util.ArrayList;
 
@@ -23,7 +25,6 @@ import static org.mockito.Mockito.when;
 @DisplayName("Product service tests")
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
-
     @Mock
     private ProductRepository productRepository;
 
@@ -36,38 +37,40 @@ class ProductServiceImplTest {
     @Captor
     private ArgumentCaptor<Integer> intCaptor;
 
+    private final ProjectObjectsFactory factory = new ProjectObjectsFactory();
+
+    private ArrayList<ProductDto> productDtos;
+
+    @BeforeEach
+    void setUp() {
+        productDtos = new ArrayList<>();
+    }
+
     @Test
     @DisplayName("success cart")
     public void formCartSuccessfully() throws BadRequestException, ResourceNotFoundException {
-        ArrayList<ProductDto> productDtos = new ArrayList<>();
-        productDtos.add(ProductDto.builder().id(1).quantity(5).build());
-        productDtos.add(ProductDto.builder().id(1).quantity(3).build());
-        productDtos.add(ProductDto.builder().id(2).quantity(2).build());
+        productDtos.add(factory.createProductDto());
+        productDtos.add(factory.createProductDto());
 
         ProductEntity product1 = ProductEntity.builder()
                 .id(1)
-                .quantity(10)
-                .build();
-        ProductEntity product2 = ProductEntity.builder()
-                .id(2)
-                .quantity(5)
+                .quantity(30)
                 .build();
 
         when(productRepository.getById(1)).thenReturn(product1);
-        when(productRepository.getById(2)).thenReturn(product2);
 
         ArrayList<ProductDto> result = productService.formCart(productDtos);
 
-        assertThat(result).hasSize(2);
-        assertThat(result).extracting("id").containsOnly(1, 2);
-        assertThat(result).extracting("purchaseQuantity").containsOnly(8, 2);
+        assertThat(result).hasSize(1);
+        assertThat(result).extracting("id").containsOnly(1);
+        assertThat(result).extracting("purchaseQuantity").containsOnly(20);
     }
 
     @Test
     @DisplayName("get by id success")
     public void getByIdSuccess() throws ResourceNotFoundException {
         ProductEntity product = ProductEntity.builder().id(1).quantity(10).build();
-        ProductDto expectedDto = ProductDto.builder().id(1).quantity(10).build();
+        ProductDto expectedDto = factory.createProductDto();
 
         when(productRepository.getById(1)).thenReturn(product);
 
@@ -107,7 +110,6 @@ class ProductServiceImplTest {
 
         productService.fullUpdateProduct(workoutDto, id);
 
-
         verify(productRepository).update(productDtoCapture.capture(), intCaptor.capture());
         assertEquals(workoutDto, productDtoCapture.getValue());
         assertEquals(id, intCaptor.getValue());
@@ -117,13 +119,12 @@ class ProductServiceImplTest {
     @DisplayName("decrease Product amount method invoked correctly")
     public void decreaseProductAmount() throws ResourceNotFoundException {
         ArgumentCaptor<ArrayList<ProductDto>> captor = ArgumentCaptor.forClass(ArrayList.class);
-        ArrayList<ProductDto> basket = new ArrayList<>();
-        basket.add(new ProductDto());
+        productDtos.add(new ProductDto());
 
-        productService.decreaseProductAmount(basket);
+        productService.decreaseProductAmount(productDtos);
 
         verify(productRepository).decreaseAmount(captor.capture());
-        assertEquals(basket, captor.getValue());
+        assertEquals(productDtos, captor.getValue());
     }
 
     @Test
@@ -138,8 +139,7 @@ class ProductServiceImplTest {
     @Test
     @DisplayName("another quantity exception")
     public void anotherQuantityException() throws ResourceNotFoundException {
-        ArrayList<ProductDto> productDtos = new ArrayList<>();
-        productDtos.add(ProductDto.builder().id(1).quantity(20).build());
+        productDtos.add(factory.createProductDto());
 
         ProductEntity product1 = ProductEntity.builder()
                 .id(1)

@@ -1,5 +1,6 @@
 package unit.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,10 +17,10 @@ import ru.clevertec.check.service.CardService;
 import ru.clevertec.check.service.ProductService;
 import ru.clevertec.check.service.impl.ClientServiceImpl;
 import ru.clevertec.check.service.impl.FilePrintServiceImpl;
+import unit.util.ProjectObjectsFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,17 +37,28 @@ class ClientServiceImplTest {
     private CardService cardService;
 
     @Mock
+    private UserDto userDto;
+
+    @Mock
     private FilePrintServiceImpl fileService;
 
     @InjectMocks
     private ClientServiceImpl userService;
 
+    private ArrayList<ProductDto> products;
+
+    private final ProjectObjectsFactory factory = new ProjectObjectsFactory();
+
+    @BeforeEach
+    void setUp() {
+        products = new ArrayList<>();
+    }
+
     @Test
     @DisplayName("create user dto")
     public void createUserDto() throws BadRequestException, ResourceNotFoundException {
-        UserDto userDto = mock(UserDto.class);
-        ArrayList<ProductDto> products = new ArrayList<>(Arrays.asList(new ProductDto()));
         CardDto cardDto = new CardDto();
+        products.add(new ProductDto());
 
         when(userDto.getProducts()).thenReturn(products);
         when(userDto.getDiscountCard()).thenReturn(123);
@@ -63,25 +75,18 @@ class ClientServiceImplTest {
     @Test
     @DisplayName("create bill")
     public void fromTotalBill() throws Exception {
-        UserDto userDto = mock(UserDto.class);
-        ProductDto productDto = ProductDto.builder()
-                .quantity(10)
-                .purchaseQuantity(1)
-                .price(10f)
-                .isWholesale(true)
-                .description("test")
-                .build();
-        ArrayList<ProductDto> basket = new ArrayList<>(Arrays.asList(productDto));
+        ProductDto productDto = factory.createProductDto();
+        products.add(productDto);
         CardDto discountDebitCard = CardDto.builder()
                 .discountCard(123)
                 .discountAmount(5)
                 .build();
         File billFile = mock(File.class);
 
-        when(userDto.getProducts()).thenReturn(basket);
+        when(userDto.getProducts()).thenReturn(products);
         when(userDto.getCardDto()).thenReturn(discountDebitCard);
         when(userDto.getBalanceDebitCard()).thenReturn(1000f);
-        doNothing().when(productService).decreaseProductAmount(basket);
+        doNothing().when(productService).decreaseProductAmount(products);
         when(fileService.createBillFile(any(UserDto.class), anyFloat(), anyFloat(), anyFloat())).thenReturn(billFile);
 
         File result = userService.formTotalBill(userDto);
@@ -93,21 +98,15 @@ class ClientServiceImplTest {
     @Test
     @DisplayName("Not enough money exception")
     public void notEnoughMoneyException() {
-        UserDto userDto = mock(UserDto.class);
-        ProductDto productDto = ProductDto.builder()
-                .quantity(10)
-                .purchaseQuantity(2)
-                .price(10f)
-                .isWholesale(true)
-                .description("test")
-                .build();
-        ArrayList<ProductDto> basket = new ArrayList<>(Arrays.asList(productDto));
+        ProductDto productDto = factory.createProductDto();
+        products.add(productDto);
+
         CardDto discountDebitCard = CardDto.builder()
                 .discountCard(123)
                 .discountAmount(5)
                 .build();
 
-        when(userDto.getProducts()).thenReturn(basket);
+        when(userDto.getProducts()).thenReturn(products);
         when(userDto.getCardDto()).thenReturn(discountDebitCard);
         when(userDto.getBalanceDebitCard()).thenReturn(0f);
 
